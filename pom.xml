@@ -13,6 +13,7 @@
         <module>camunda-example-repository</module>
         <module>camunda-example-infrastructure</module>
         <module>camunda-example-domain</module>
+        <module>camunda-example-exception-handler</module>
     </modules>
     <packaging>pom</packaging>
 
