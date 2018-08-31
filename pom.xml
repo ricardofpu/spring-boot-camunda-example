@@ -115,6 +115,12 @@
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
+                <artifactId>camunda-example-exception-handler</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>camunda-example-infrastructure</artifactId>
                 <version>${project.version}</version>
             </dependency>
