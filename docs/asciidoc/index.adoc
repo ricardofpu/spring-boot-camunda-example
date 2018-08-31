@@ -1,0 +1,13 @@
+= Camunda Example API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:toc-title: Table of Contents
+:sectlinks:
+
+include::introduction.adoc[]
+
+= Resources - V1
+The V1 API resources is detailed in this section.

@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>br.com.camunda.example</groupId>
+    <artifactId>camunda-example</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>camunda-example-web</module>
+        <module>camunda-example-api</module>
+        <module>camunda-example-repository</module>
+        <module>camunda-example-infrastructure</module>
+        <module>camunda-example-domain</module>
+    </modules>
+    <packaging>pom</packaging>
+
+    <name>camunda-example</name>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.3.RELEASE</version>
+        <relativePath/>
+    </parent>
+
+    <properties>
+        <!--PROJECT-->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <kotlin.version>1.2.60</kotlin.version>
+
+        <!--SPRING-->
+        <spring.boot.version>1.5.3.RELEASE</spring.boot.version>
+        <spring.cloud.version>1.3.1.RELEASE</spring.cloud.version>
+
+        <!--COMMONS-->
+        <commons.lang3.version>3.5</commons.lang3.version>
+        <jackson.version>2.9.2</jackson.version>
+        <log4j.version>2.6.2</log4j.version>
+
+        <!--DB-->
+        <hikari.cp.version>2.6.1</hikari.cp.version>
+        <liquibase.core.version>3.5.3</liquibase.core.version>
+        <liquibase.version>1.2.4</liquibase.version>
+        <postgresql.version>42.1.1</postgresql.version>
+
+        <!--SONAR-->
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+        <sonar.sources>src/main/kotlin</sonar.sources>
+        <sonar.tests>src/test/kotlin</sonar.tests>
+        <sonar.jacoco.reportPath>${project.basedir}/target/jacoco.exec</sonar.jacoco.reportPath>
+
+        <!--REST DOCS-->
+        <spring.restdocs.version>2.0.1.RELEASE</spring.restdocs.version>
+        <spring.auto.restdocs.version>2.0.1</spring.auto.restdocs.version>
+        <dokka.version>0.9.16</dokka.version>
+
+        <!--CAMUNDA-->
+        <camunda.spring.boot.version>2.2.0</camunda.spring.boot.version>
+        <camunda.engine.version>7.7.0</camunda.engine.version>
+        <camunda.bpm.assert.scenario.version>0.2</camunda.bpm.assert.scenario.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-reflect</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons.lang3.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-test-junit</artifactId>
+            <version>${kotlin.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>camunda-example-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>camunda-example-domain</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>camunda-example-infrastructure</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>camunda-example-repository</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>camunda-example-web</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.zaxxer</groupId>
+                <artifactId>HikariCP</artifactId>
+                <version>${hikari.cp.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${postgresql.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-core</artifactId>
+                <version>${liquibase.core.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.servlet</groupId>
+                        <artifactId>servlet-api</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.nhaarman</groupId>
+                <artifactId>mockito-kotlin-kt1.1</artifactId>
+                <version>1.5.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jsr310</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.module</groupId>
+                <artifactId>jackson-module-kotlin</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+
+            <!--REST DOCS-->
+            <dependency>
+                <groupId>org.springframework.restdocs</groupId>
+                <artifactId>spring-restdocs-core</artifactId>
+                <version>${spring.restdocs.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.restdocs</groupId>
+                <artifactId>spring-restdocs-mockmvc</artifactId>
+                <version>${spring.restdocs.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>capital.scalable</groupId>
+                <artifactId>spring-auto-restdocs-core</artifactId>
+                <version>${spring.auto.restdocs.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!--WORKFLOW CAMUNDA-->
+            <dependency>
+                <groupId>org.camunda.bpm.extension.springboot</groupId>
+                <artifactId>camunda-bpm-spring-boot-starter</artifactId>
+                <version>${camunda.spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.camunda.bpm.extension.springboot</groupId>
+                <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
+                <version>${camunda.spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.camunda.bpm.extension.springboot</groupId>
+                <artifactId>camunda-bpm-spring-boot-starter-test</artifactId>
+                <version>${camunda.spring.boot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.camunda.bpm.extension.springboot</groupId>
+                <artifactId>camunda-bpm-spring-boot-starter-rest</artifactId>
+                <version>${camunda.spring.boot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.camunda.bpm.extension</groupId>
+                <artifactId>camunda-bpm-assert-scenario</artifactId>
+                <version>${camunda.bpm.assert.scenario.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.camunda.bpm</groupId>
+                <artifactId>camunda-engine</artifactId>
+                <version>${camunda.engine.version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <version>${kotlin.version}</version>
+
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirs>
+                                <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
+                            </sourceDirs>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>test-compile</id>
+                        <goals>
+                            <goal>test-compile</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirs>
+                                <sourceDir>${project.basedir}/src/test/kotlin</sourceDir>
+                            </sourceDirs>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <!-- essa configuracao e necessaria para o kotlin, nao mexer -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <executions>
+                    <!-- Replacing default-compile as it is treated specially by maven -->
+                    <execution>
+                        <id>default-compile</id>
+                        <phase>none</phase>
+                    </execution>
+                    <!-- Replacing default-testCompile as it is treated specially by maven -->
+                    <execution>
+                        <id>default-testCompile</id>
+                        <phase>none</phase>
+                    </execution>
+                    <execution>
+                        <id>java-compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>java-test-compile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.1</version>
+                <configuration>
+                    <destFile>${sonar.jacoco.reportPath}</destFile>
+                    <append>true</append>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>default-prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>default-report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+                <configuration>
+                    <providerImplementations>
+                        <git>jgit</git>
+                    </providerImplementations>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.scm</groupId>
+                        <artifactId>maven-scm-provider-jgit</artifactId>
+                        <version>1.9.5</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.22.0</version>
+                    <configuration>
+                        <includes>
+                            <include>**/*Test.*</include>
+                        </includes>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.asciidoctor</groupId>
+                    <artifactId>asciidoctor-maven-plugin</artifactId>
+                    <version>1.5.6</version>
+                    <executions>
+                        <execution>
+                            <id>generate-docs</id>
+                            <phase>prepare-package</phase>
+                            <goals>
+                                <goal>process-asciidoc</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <sourceDirectory>${user.dir}/docs/asciidoc</sourceDirectory>
+                        <backend>html5</backend>
+                        <doctype>book</doctype>
+                        <attributes>
+                            <snippets>${project.build.directory}/generated-snippets</snippets>
+                            <source-highlighter>highlight.js</source-highlighter>
+                        </attributes>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.jetbrains.dokka</groupId>
+                    <artifactId>dokka-maven-plugin</artifactId>
+                    <version>${dokka.version}</version>
+                    <executions>
+                        <execution>
+                            <phase>compile</phase>
+                            <goals>
+                                <goal>dokka</goal>
+                            </goals>
+                            <configuration>
+                                <sourceDirectories>
+                                    <sourceDirectory>
+                                        ${project.basedir}/../customer-manager-api/src/main/kotlin
+                                    </sourceDirectory>
+                                    <sourceDirectory>
+                                        ${project.basedir}/../customer-manager-web/src/main/kotlin/br/com/zup/realwave/swapper/web/controller
+                                    </sourceDirectory>
+                                </sourceDirectories>
+                            </configuration>
+                        </execution>
+                    </executions>
+                    <dependencies>
+                        <dependency>
+                            <groupId>capital.scalable</groupId>
+                            <artifactId>spring-auto-restdocs-dokka-json</artifactId>
+                            <version>${spring.auto.restdocs.version}</version>
+                        </dependency>
+                    </dependencies>
+                    <configuration>
+                        <outputFormat>auto-restdocs-json</outputFormat>
+                        <outputDir>${project.build.directory}/generated-javadoc-json</outputDir>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>spring-releases</id>
+            <url>https://repo.spring.io/libs-release</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-releases</id>
+            <url>https://repo.spring.io/libs-release</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+</project>
