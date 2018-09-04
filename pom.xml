@@ -8,12 +8,13 @@
     <artifactId>camunda-example</artifactId>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>camunda-example-web</module>
         <module>camunda-example-api</module>
-        <module>camunda-example-repository</module>
-        <module>camunda-example-infrastructure</module>
         <module>camunda-example-domain</module>
         <module>camunda-example-exception-handler</module>
+        <module>camunda-example-infrastructure</module>
+        <module>camunda-example-repository</module>
+        <module>camunda-example-web</module>
+
     </modules>
     <packaging>pom</packaging>
 
@@ -122,8 +123,8 @@
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>camunda-example-domain</artifactId>
-                <version>${project.version}</version>
                 <type>test-jar</type>
+                <version>${project.version}</version>
                 <scope>test</scope>
             </dependency>
 
@@ -156,8 +157,6 @@
                 <artifactId>HikariCP</artifactId>
                 <version>${hikari.cp.version}</version>
             </dependency>
-
-
 
             <dependency>
                 <groupId>org.postgresql</groupId>
@@ -273,7 +272,16 @@
                     <compilerPlugins>
                         <plugin>jpa</plugin>
                     </compilerPlugins>
+                    <jvmTarget>${java.version}</jvmTarget>
                 </configuration>
+
+                <dependencies>
+                    <dependency>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <artifactId>kotlin-maven-noarg</artifactId>
+                        <version>${kotlin.version}</version>
+                    </dependency>
+                </dependencies>
 
                 <executions>
                     <execution>
@@ -424,10 +432,10 @@
                             <configuration>
                                 <sourceDirectories>
                                     <sourceDirectory>
-                                        ${project.basedir}/../customer-manager-api/src/main/kotlin
+                                        ${project.basedir}/../camunda-example-api/src/main/kotlin
                                     </sourceDirectory>
                                     <sourceDirectory>
-                                        ${project.basedir}/../customer-manager-web/src/main/kotlin/br/com/zup/realwave/swapper/web/controller
+                                        ${project.basedir}/../camunda-example-web/src/main/kotlin/br/com/camunda/example/web/controller
                                     </sourceDirectory>
                                 </sourceDirectories>
                             </configuration>

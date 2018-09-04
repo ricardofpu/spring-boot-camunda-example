@@ -28,7 +28,7 @@ data class Customer(
 
     val phoneNumber: String,
 
-    val email: String,
+    val email: String?,
 
     val birthDate: Date,
 

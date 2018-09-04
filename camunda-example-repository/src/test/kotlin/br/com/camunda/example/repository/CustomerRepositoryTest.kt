@@ -37,5 +37,4 @@ class CustomerRepositoryTest : RepositoryBaseTest() {
         assertNull(find)
     }
 
-
 }

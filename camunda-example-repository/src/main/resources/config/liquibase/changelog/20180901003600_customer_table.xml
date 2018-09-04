@@ -24,7 +24,7 @@
             </column>
 
             <column name="email" type="java.sql.Types.VARCHAR">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="status" type="java.sql.Types.VARCHAR">

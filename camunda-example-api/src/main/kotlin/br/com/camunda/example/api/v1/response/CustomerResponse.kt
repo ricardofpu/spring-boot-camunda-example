@@ -1,6 +1,6 @@
 package br.com.camunda.example.api.v1.response
 
-import java.time.LocalDate
+import java.util.*
 
 /**
  * Customer Response
@@ -16,6 +16,11 @@ data class CustomerResponse(
      * Full name
      */
     val fullName: String?,
+
+    /**
+     * Nick name
+     */
+    val nickName: String?,
 
     /**
      * Gender
@@ -35,6 +40,11 @@ data class CustomerResponse(
     /**
      * Birth date
      */
-    val birthDate: LocalDate?
+    val birthDate: Date?,
+
+    /**
+     * Status
+     */
+    val status: String?
 
 )

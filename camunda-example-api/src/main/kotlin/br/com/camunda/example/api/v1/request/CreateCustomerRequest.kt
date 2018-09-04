@@ -1,6 +1,6 @@
 package br.com.camunda.example.api.v1.request
 
-import java.time.LocalDate
+import java.util.*
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Pattern
 
@@ -13,6 +13,11 @@ data class CreateCustomerRequest(
      * Customer full name
      */
     @field:NotNull val fullName: String?,
+
+    /**
+     * Customer nick name
+     */
+    @field:NotNull val nickName: String?,
 
     /**
      * Customer gender
@@ -32,6 +37,6 @@ data class CreateCustomerRequest(
     /**
      * Customer birth date
      */
-    @field:NotNull val birthDate: LocalDate?
+    @field:NotNull val birthDate: Date?
 
 )

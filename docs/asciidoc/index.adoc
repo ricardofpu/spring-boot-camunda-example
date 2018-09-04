@@ -11,3 +11,5 @@ include::introduction.adoc[]
 
 = Resources - V1
 The V1 API resources is detailed in this section.
+
+include::customer.adoc[]

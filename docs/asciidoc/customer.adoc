@@ -1,0 +1,3 @@
+== Customer
+
+include::{snippets}/customer-controller-test/should create customer/auto-section.adoc[]
