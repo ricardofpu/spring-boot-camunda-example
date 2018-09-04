@@ -80,6 +80,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-maven-noarg</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>${commons.lang3.version}</version>
@@ -115,6 +121,14 @@
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
+                <artifactId>camunda-example-domain</artifactId>
+                <version>${project.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>camunda-example-exception-handler</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -142,6 +156,8 @@
                 <artifactId>HikariCP</artifactId>
                 <version>${hikari.cp.version}</version>
             </dependency>
+
+
 
             <dependency>
                 <groupId>org.postgresql</groupId>
@@ -252,6 +268,12 @@
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
                 <version>${kotlin.version}</version>
+
+                <configuration>
+                    <compilerPlugins>
+                        <plugin>jpa</plugin>
+                    </compilerPlugins>
+                </configuration>
 
                 <executions>
                     <execution>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+
+    <changeSet id="20180901003900-1" author="ricardo.borges">
+        <createTable tableName="payment_transaction">
+            <column name="id" type="java.sql.Types.VARCHAR">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="customer_id" type="java.sql.Types.VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="transaction_id" type="java.sql.Types.VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="payment_amount" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="payment_scale" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="payment_currency" type="java.sql.Types.VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="status" type="java.sql.Types.VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="type" type="java.sql.Types.VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_at" type="java.sql.Types.TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="updated_at" type="java.sql.Types.TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20180901003900-2" author="ricardo.borges">
+        <addForeignKeyConstraint baseColumnNames="customer_id" baseTableName="payment_transaction"
+                                 constraintName="fk_customer_id" deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+                                 referencedTableName="customer"/>
+    </changeSet>
+
+</databaseChangeLog>
