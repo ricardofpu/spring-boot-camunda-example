@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 @ComponentScan(basePackages = ["br.com.camunda.example"])
 @EnableJpaRepositories(basePackages = ["br.com.camunda.example.repository"])
 @EnableJpaAuditing
-open class RepositoryConfiguration {
+open class RepositoryConfig {
 
     @Bean
     @ConfigurationProperties(prefix = "spring.datasource")

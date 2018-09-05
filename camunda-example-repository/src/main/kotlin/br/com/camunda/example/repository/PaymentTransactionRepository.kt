@@ -5,4 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface PaymentTransactionRepository : JpaRepository<PaymentTransaction, String>
+interface PaymentTransactionRepository : JpaRepository<PaymentTransaction, String> {
+
+    fun findByCustomerId(customerId: String): List<PaymentTransaction>
+}

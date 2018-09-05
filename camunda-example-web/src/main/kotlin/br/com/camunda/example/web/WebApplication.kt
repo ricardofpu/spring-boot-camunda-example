@@ -1,6 +1,6 @@
 package br.com.camunda.example.web
 
-import br.com.camunda.example.repository.config.RepositoryConfiguration
+import br.com.camunda.example.repository.config.RepositoryConfig
 import org.apache.logging.log4j.LogManager
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
@@ -13,7 +13,7 @@ import java.net.InetAddress
 
 @SpringBootApplication
 @Configuration
-@Import(RepositoryConfiguration::class)
+@Import(RepositoryConfig::class)
 @ComponentScan(basePackages = ["br.com.camunda.example"])
 @EntityScan(basePackages = ["br.com.camunda.example.domain"])
 @EnableAutoConfiguration

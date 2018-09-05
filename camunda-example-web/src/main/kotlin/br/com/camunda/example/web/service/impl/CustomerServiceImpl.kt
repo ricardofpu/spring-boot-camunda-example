@@ -24,7 +24,13 @@ class CustomerServiceImpl constructor(
     }
 
     override fun update(customer: Customer): Customer {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        log.debug("Customer will be updated in database with values [{}]", customer)
+
+        val result = repository.save(customer)
+
+        log.debug("Customer updated in database with id {}", customer.id)
+
+        return result
     }
 
     override fun delete(customerId: String) {
