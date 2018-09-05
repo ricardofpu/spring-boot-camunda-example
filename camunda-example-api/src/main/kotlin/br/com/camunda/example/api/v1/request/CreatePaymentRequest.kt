@@ -28,16 +28,16 @@ data class CreatePaymentRequest(
         /**
          * Amount of payment
          */
-        @field:[NotNull Min(0)] private val amount: Int,
+        @field:[NotNull Min(0)] val amount: Int,
 
         /**
          * Scale that will be applied to amount
          */
-        @field:[NotNull Min(0)] private val scale: Int,
+        @field:[NotNull Min(0)] val scale: Int,
 
         /**
          * Currency
          */
-        @field:NotNull private val currency: String
+        @field:NotNull val currency: String
     )
 }

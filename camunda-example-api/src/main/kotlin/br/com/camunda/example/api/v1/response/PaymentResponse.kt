@@ -40,16 +40,16 @@ data class PaymentResponse(
         /**
          * Amount
          */
-        private val amount: Int?,
+        val amount: Int?,
 
         /**
          * Scale
          */
-        private val scale: Int?,
+        val scale: Int?,
 
         /**
          * Currency
          */
-        private val currency: String?
+        val currency: String?
     )
 }

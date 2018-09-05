@@ -4,7 +4,9 @@ import br.com.camunda.example.domain.model.Customer
 
 interface CustomerService {
 
-    fun create(customer: Customer): Customer
+    fun findById(id: String): Customer
+
+    fun save(customer: Customer): Customer
 
     fun update(customer: Customer): Customer
 

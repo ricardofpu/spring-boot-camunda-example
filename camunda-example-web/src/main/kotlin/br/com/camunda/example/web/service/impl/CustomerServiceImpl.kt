@@ -16,7 +16,11 @@ class CustomerServiceImpl constructor(
 
     private val log = LogManager.getLogger(this.javaClass)
 
-    override fun create(customer: Customer): Customer {
+    override fun findById(id: String): Customer {
+        return getCustomer(id)
+    }
+
+    override fun save(customer: Customer): Customer {
         val result = repository.save(customer)
 
         log.debug("Customer saved in database with values [{}]", result)

@@ -23,7 +23,7 @@ class CustomerController constructor(
      */
     override fun create(@RequestBody @Valid request: CreateCustomerRequest): CustomerResponse {
         val customer = request.toModel()
-        val result = customerService.create(customer)
+        val result = customerService.save(customer)
         return result.toResponse()
     }
 }
