@@ -6,4 +6,6 @@ interface PaymentService {
 
     fun save(paymentTransaction: PaymentTransaction): PaymentTransaction
 
+    fun transfer(paymentTransaction: PaymentTransaction): PaymentTransaction
+
 }

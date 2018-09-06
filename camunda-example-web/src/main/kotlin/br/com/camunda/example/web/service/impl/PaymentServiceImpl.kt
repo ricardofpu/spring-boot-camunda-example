@@ -20,4 +20,12 @@ class PaymentServiceImpl constructor(
         return result
     }
 
+    override fun transfer(paymentTransaction: PaymentTransaction): PaymentTransaction {
+        log.debug("Received request to transference from customerId {}", paymentTransaction.customer.id)
+
+        val result = repository.save(paymentTransaction)
+
+        log.debug("Transference saved in database with values [{}]", result)
+        return result
+    }
 }

@@ -1,5 +1,7 @@
 package br.com.camunda.example.domain
 
+import br.com.camunda.example.domain.enums.PaymentType
+import br.com.camunda.example.domain.enums.TransactionType
 import br.com.camunda.example.domain.model.Customer
 import br.com.camunda.example.domain.model.PaymentTransaction
 import java.time.Instant
@@ -21,8 +23,8 @@ fun dummyPaymentTransaction(
     paymentScale: Int = 2,
     paymentCurrency: String = "BRL",
     transactionId: String = randomUUID(),
-    status: String = "PROCESSED",
-    type: PaymentTransaction.PaymentType = PaymentTransaction.PaymentType.CREDIT,
+    transactionType: TransactionType = TransactionType.PAYMENT,
+    type: PaymentType = PaymentType.CREDIT,
     customer: Customer = dummyCustomer()
 ): PaymentTransaction =
     PaymentTransaction(
@@ -31,7 +33,7 @@ fun dummyPaymentTransaction(
         paymentScale = paymentScale,
         paymentCurrency = paymentCurrency,
         transactionId = transactionId,
-        status = status,
+        transactionType = transactionType,
         type = type,
         customer = customer
     )

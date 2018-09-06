@@ -1,7 +1,7 @@
 package br.com.camunda.example.repository
 
 import br.com.camunda.example.domain.dummyCustomer
-import br.com.camunda.example.domain.model.Customer
+import br.com.camunda.example.domain.enums.CustomerStatus
 import br.com.camunda.example.domain.randomUUID
 import br.com.camunda.example.repository.config.RepositoryBaseTest
 import org.junit.Test
@@ -27,7 +27,7 @@ class CustomerRepositoryTest : RepositoryBaseTest() {
         assertEquals(customer.phoneNumber, find.phoneNumber)
         assertEquals(customer.birthDate, find.birthDate)
         assertEquals(customer.gender, find.gender)
-        assertEquals(Customer.Status.ACTIVE, find.status)
+        assertEquals(CustomerStatus.ACTIVE, find.status)
         assertNotNull(find.createdAt)
     }
 

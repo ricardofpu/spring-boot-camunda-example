@@ -5,33 +5,28 @@ import javax.validation.constraints.NotNull
 import javax.validation.constraints.Pattern
 
 /**
- * Create Payment Request
+ * Create Transfer Request
  */
-data class CreatePaymentRequest(
+data class CreateTransferRequest(
 
     /**
-     * Payment
+     * Transference
      */
-    @field:NotNull val payment: Payment?,
+    @field:NotNull val transferenceValue: Transference?,
 
     /**
-     * Payment type
+     * Identify an unique to customer that will be receive transference
      */
-    @field:Pattern(regexp = "CREDIT|DEBIT") val type: String?,
-
-    /**
-     * Transaction type
-     */
-    @field:Pattern(regexp = "PAYMENT|WITHDRAW") val transactionType: String?
+    @field:NotNull val destinationCustomerId: String?
 ) {
 
     /**
-     * Payment object
+     * Transference object
      */
-    data class Payment(
+    data class Transference(
 
         /**
-         * Amount of payment
+         * Amount of transference
          */
         @field:[NotNull Min(0)] val amount: Int,
 

@@ -1,6 +1,7 @@
 package br.com.camunda.example.api.v1
 
 import br.com.camunda.example.api.v1.request.CreatePaymentRequest
+import br.com.camunda.example.api.v1.request.CreateTransferRequest
 import br.com.camunda.example.api.v1.response.PaymentResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -20,13 +21,24 @@ interface PaymentApi {
 
     /**
      * Create Payment
+     * @param customerId Identify an unique to customer that will receive payment
      */
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     @PostMapping("/customers/{customerId}")
-    fun create(
+    fun payment(
         @PathVariable("customerId") customerId: String,
         @RequestBody @Valid request: CreatePaymentRequest
     ): PaymentResponse
+
+    /**
+     * Create Transfer
+     * @param customerId Identify an unique to customer that will do transference
+     */
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    @PostMapping("/transfers/customers/{customerId}")
+    fun transference(@PathVariable("customerId") customerId: String,
+                     @RequestBody @Valid request: CreateTransferRequest): PaymentResponse
 
 }

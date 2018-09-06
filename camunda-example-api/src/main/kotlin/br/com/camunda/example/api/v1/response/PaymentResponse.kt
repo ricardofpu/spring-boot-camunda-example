@@ -1,8 +1,11 @@
 package br.com.camunda.example.api.v1.response
 
+import com.fasterxml.jackson.annotation.JsonInclude
+
 /**
  * Payment Response
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 data class PaymentResponse(
 
     /**
@@ -14,6 +17,11 @@ data class PaymentResponse(
      * Transaction id
      */
     val transactionId: String?,
+
+    /**
+     * Transaction type
+     */
+    val transactionType: String?,
 
     /**
      * Payment
@@ -28,7 +36,12 @@ data class PaymentResponse(
     /**
      * Status
      */
-    val status: String?
+    val status: String?,
+
+    /**
+     * Destination Customer id
+     */
+    val destinationCustomerId: String?
 
 ) {
 

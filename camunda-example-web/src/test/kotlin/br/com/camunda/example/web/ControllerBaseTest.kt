@@ -162,13 +162,14 @@ abstract class ControllerBaseTest {
         )
 
     protected fun buildCreatePaymentRequest() =
-            CreatePaymentRequest(
-                payment = CreatePaymentRequest.Payment(
-                    amount = 1000,
-                    scale = 2,
-                    currency = "BRL"
-                ),
-                type = "CREDIT"
-            )
+        CreatePaymentRequest(
+            payment = CreatePaymentRequest.Payment(
+                amount = 1000,
+                scale = 2,
+                currency = "BRL"
+            ),
+            type = "CREDIT",
+            transactionType = "PAYMENT"
+        )
 
 }

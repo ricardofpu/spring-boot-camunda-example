@@ -1,6 +1,9 @@
 package br.com.camunda.example.domain.model
 
 import br.com.camunda.example.domain.entity.DBEntity
+import br.com.camunda.example.domain.enums.PaymentStatus
+import br.com.camunda.example.domain.enums.PaymentType
+import br.com.camunda.example.domain.enums.TransactionType
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.GenericGenerator
 import java.util.*
@@ -26,6 +29,9 @@ data class PaymentTransaction(
 
     val transactionId: String,
 
+    @Convert(converter = TransactionTypeConverter::class)
+    val transactionType: TransactionType,
+
     val paymentAmount: Int,
 
     val paymentScale: Int,
@@ -35,27 +41,53 @@ data class PaymentTransaction(
     @Convert(converter = PaymentTypeConverter::class)
     val type: PaymentType,
 
-    val status: String,
-
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     @NotNull
-    val customer: Customer
+    val customer: Customer,
+
+    val destinationCustomerId: String? = null
+
 ) : DBEntity() {
-    enum class PaymentType {
-        DEBIT,
-        CREDIT
-    }
+
+    @Convert(converter = PaymentStatusConverter::class)
+    var status: PaymentStatus = PaymentStatus.PROCESSED
 
     companion object {
         class PaymentTypeConverter : AttributeConverter<PaymentType, String> {
-            override fun convertToDatabaseColumn(status: PaymentType?): String? {
-                return status?.name
+            override fun convertToDatabaseColumn(paymentType: PaymentType?): String? {
+                return paymentType?.name
             }
 
             override fun convertToEntityAttribute(value: String?): PaymentType? {
                 return if (value == null) null else Arrays.stream(PaymentType.values())
+                    .filter { p -> p.name == value }
+                    .findFirst()
+                    .orElseThrow { IllegalArgumentException() }
+            }
+        }
+
+        class PaymentStatusConverter : AttributeConverter<PaymentStatus, String> {
+            override fun convertToDatabaseColumn(paymentStatus: PaymentStatus?): String? {
+                return paymentStatus?.name
+            }
+
+            override fun convertToEntityAttribute(value: String?): PaymentStatus? {
+                return if (value == null) null else Arrays.stream(PaymentStatus.values())
+                    .filter { p -> p.name == value }
+                    .findFirst()
+                    .orElseThrow { IllegalArgumentException() }
+            }
+        }
+
+        class TransactionTypeConverter : AttributeConverter<TransactionType, String> {
+            override fun convertToDatabaseColumn(transactionType: TransactionType?): String? {
+                return transactionType?.name
+            }
+
+            override fun convertToEntityAttribute(value: String?): TransactionType? {
+                return if (value == null) null else Arrays.stream(TransactionType.values())
                     .filter { p -> p.name == value }
                     .findFirst()
                     .orElseThrow { IllegalArgumentException() }

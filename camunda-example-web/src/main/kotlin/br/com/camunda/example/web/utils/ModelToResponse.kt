@@ -26,6 +26,8 @@ fun PaymentTransaction.toResponse(): PaymentResponse =
             currency = this.paymentCurrency
         ),
         transactionId = this.transactionId,
+        transactionType = this.transactionType.name,
         type = this.type.name,
-        status = this.status
+        status = this.status.name,
+        destinationCustomerId = this.destinationCustomerId
     )

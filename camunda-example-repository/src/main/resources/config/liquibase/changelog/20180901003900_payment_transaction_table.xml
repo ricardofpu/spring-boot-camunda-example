@@ -15,7 +15,15 @@
                 <constraints nullable="false"/>
             </column>
 
+            <column name="destination_customer_id" type="java.sql.Types.VARCHAR">
+                <constraints nullable="true"/>
+            </column>
+
             <column name="transaction_id" type="java.sql.Types.VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="transaction_type" type="java.sql.Types.VARCHAR">
                 <constraints nullable="false"/>
             </column>
 
