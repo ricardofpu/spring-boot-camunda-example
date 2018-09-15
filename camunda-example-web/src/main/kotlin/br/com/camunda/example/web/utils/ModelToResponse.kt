@@ -1,9 +1,7 @@
 package br.com.camunda.example.web.utils
 
 import br.com.camunda.example.api.v1.response.CustomerResponse
-import br.com.camunda.example.api.v1.response.PaymentResponse
 import br.com.camunda.example.domain.model.Customer
-import br.com.camunda.example.domain.model.PaymentTransaction
 
 fun Customer.toResponse(): CustomerResponse =
     CustomerResponse(
@@ -17,17 +15,17 @@ fun Customer.toResponse(): CustomerResponse =
         birthDate = this.birthDate
     )
 
-fun PaymentTransaction.toResponse(): PaymentResponse =
-    PaymentResponse(
-        id = this.id,
-        payment = PaymentResponse.Payment(
-            amount = this.paymentAmount,
-            scale = this.paymentScale,
-            currency = this.paymentCurrency
-        ),
-        transactionId = this.transactionId,
-        transactionType = this.transactionType.name,
-        type = this.type.name,
-        status = this.status.name,
-        destinationCustomerId = this.destinationCustomerId
-    )
+//fun PaymentTransaction.toResponse(): PaymentResponse =
+//    PaymentResponse(
+//        id = this.id,
+//        payment = PaymentResponse.Payment(
+//            amount = this.paymentAmount,
+//            scale = this.paymentScale,
+//            currency = this.paymentCurrency
+//        ),
+//        transactionId = this.transactionId,
+//        transactionType = this.transactionType.name,
+//        type = this.type.name,
+//        status = this.status.name,
+//        destinationCustomerId = this.destinationCustomerId
+//    )

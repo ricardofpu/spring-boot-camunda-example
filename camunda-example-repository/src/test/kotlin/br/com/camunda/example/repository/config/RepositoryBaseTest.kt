@@ -1,7 +1,7 @@
 package br.com.camunda.example.repository.config
 
 import br.com.camunda.example.repository.CustomerRepository
-import br.com.camunda.example.repository.PaymentTransactionRepository
+import br.com.camunda.example.repository.DebitRepository
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -24,6 +24,6 @@ abstract class RepositoryBaseTest {
     protected lateinit var customerRepository: CustomerRepository
 
     @Autowired
-    protected lateinit var paymentTransactionRepository: PaymentTransactionRepository
+    protected lateinit var debitRepository: DebitRepository
 
 }

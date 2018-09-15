@@ -1,10 +1,9 @@
 package br.com.camunda.example.domain
 
 import br.com.camunda.example.domain.enums.PaymentType
-import br.com.camunda.example.domain.enums.TransactionType
+import br.com.camunda.example.domain.model.Account
 import br.com.camunda.example.domain.model.Customer
-import br.com.camunda.example.domain.model.PaymentTransaction
-import java.time.Instant
+import br.com.camunda.example.domain.model.Debit
 import java.util.*
 
 fun dummyCustomer() =
@@ -17,23 +16,40 @@ fun dummyCustomer() =
         birthDate = Date(1992, 6, 29)
     )
 
-fun dummyPaymentTransaction(
+fun dummyAccount(
     id: String = randomUUID(),
-    paymentAmount: Int = 1000,
-    paymentScale: Int = 2,
-    paymentCurrency: String = "BRL",
-    transactionId: String = randomUUID(),
-    transactionType: TransactionType = TransactionType.PAYMENT,
-    type: PaymentType = PaymentType.CREDIT,
+    balanceAmount: Long = 1000,
+    balanceScale: Int = 2,
+    balanceCurrency: String = "BRL",
     customer: Customer = dummyCustomer()
-): PaymentTransaction =
-    PaymentTransaction(
+): Account =
+    Account(
         id = id,
-        paymentAmount = paymentAmount,
-        paymentScale = paymentScale,
-        paymentCurrency = paymentCurrency,
-        transactionId = transactionId,
-        transactionType = transactionType,
-        type = type,
+        balanceAmount = balanceAmount,
+        balanceScale = balanceScale,
+        balanceCurrency = balanceCurrency,
         customer = customer
+    )
+
+fun dummyDebit(
+    id: String = randomUUID(),
+    origin: String = "ORIGIN",
+    description: String? = "Description",
+    priceAmount: Long = 1000,
+    priceScale: Int = 2,
+    priceCurrency: String = "BRL",
+    transactionId: String = randomUUID(),
+    type: PaymentType = PaymentType.CREDIT,
+    account: Account = dummyAccount()
+): Debit =
+    Debit(
+        id = id,
+        priceAmount = priceAmount,
+        priceScale = priceScale,
+        priceCurrency = priceCurrency,
+        transactionId = transactionId,
+        description = description,
+        origin = origin,
+        type = type,
+        account = account
     )
