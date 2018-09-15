@@ -2,6 +2,7 @@ package br.com.camunda.example.domain.model
 
 import br.com.camunda.example.domain.converter.PaymentTypeConverter
 import br.com.camunda.example.domain.entity.DBEntity
+import br.com.camunda.example.domain.entity.DBEntityOnlyCreate
 import br.com.camunda.example.domain.enums.PaymentType
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.GenericGenerator
@@ -47,4 +48,4 @@ data class Debit(
     @NotNull
     val account: Account
 
-) : DBEntity()
+) : DBEntityOnlyCreate()

@@ -1,6 +1,8 @@
 package br.com.camunda.example.repository.config
 
+import br.com.camunda.example.domain.dummyAccount
 import br.com.camunda.example.domain.dummyCustomer
+import br.com.camunda.example.domain.model.Account
 import br.com.camunda.example.domain.model.Customer
 import br.com.camunda.example.repository.AccountRepository
 import br.com.camunda.example.repository.CreditRepository
@@ -46,6 +48,16 @@ abstract class RepositoryBaseTest {
         assertNotNull(saved)
 
         return saved
+    }
+
+    protected fun creatAccount(customer: Customer = dummyCustomer()): Account {
+        val savedCustomer = createCustomer(customer)
+        val account = dummyAccount(customer = savedCustomer)
+
+        val savedAccount = accountRepository.save(account)
+        assertNotNull(savedAccount)
+
+        return savedAccount
     }
 
 }

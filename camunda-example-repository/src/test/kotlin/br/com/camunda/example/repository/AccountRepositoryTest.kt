@@ -24,42 +24,32 @@ class AccountRepositoryTest : RepositoryBaseTest() {
         assertEquals(saved.balanceAmount, find.balanceAmount)
         assertEquals(saved.balanceScale, find.balanceScale)
         assertEquals(saved.balanceCurrency, find.balanceCurrency)
-        assertEquals(saved.credits, find.credits)
         assertEquals(saved.customer, find.customer)
-        assertEquals(saved.debits, find.debits)
         assertNotNull(find.createdAt)
     }
 
     @Test
-    fun `shouldn't find customer when not exists`() {
-        val find = debitRepository.findOne(randomUUID())
-        assertNull(find)
+    fun `should find account by customer id`() {
+        val customer = createCustomer()
+        val account = dummyAccount(customer = customer)
+
+        val saved = accountRepository.save(account)
+        assertNotNull(saved)
+
+        val find = accountRepository.findByCustomerId(saved.customer.id)
+        assertNotNull(find)
+        assertEquals(saved.id, find.id)
+        assertEquals(saved.balanceAmount, find.balanceAmount)
+        assertEquals(saved.balanceScale, find.balanceScale)
+        assertEquals(saved.balanceCurrency, find.balanceCurrency)
+        assertEquals(saved.customer, find.customer)
+        assertNotNull(find.createdAt)
     }
 
-//    @Test
-//    fun `should find payment by customer id`() {
-//        val customer = dummyCustomer()
-//
-//        val savedCustomer = customerRepository.save(customer)
-//        assertNotNull(savedCustomer)
-//
-//        val payment = dummyPaymentTransaction(customer = savedCustomer)
-//
-//        val savedPayment = debitRepository.save(payment)
-//        assertNotNull(savedPayment)
-//
-//        val find = debitRepository.findByCustomerId(savedPayment.customer.id)
-//        assertNotNull(find)
-//        assertTrue(find.isNotEmpty())
-//        assertEquals(savedPayment.id, find[0].id)
-//        assertEquals(payment.transactionId, find[0].transactionId)
-//        assertEquals(payment.paymentAmount, find[0].paymentAmount)
-//        assertEquals(payment.paymentScale, find[0].paymentScale)
-//        assertEquals(payment.paymentCurrency, find[0].paymentCurrency)
-//        assertEquals(payment.type, find[0].type)
-//        assertEquals(payment.status, find[0].status)
-//        assertNotNull(savedPayment.customer)
-//        assertNotNull(find[0].createdAt)
-//    }
+    @Test
+    fun `shouldn't find account when not exists`() {
+        val find = accountRepository.findOne(randomUUID())
+        assertNull(find)
+    }
 
 }

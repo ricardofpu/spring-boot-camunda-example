@@ -10,6 +10,7 @@ import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
+import javax.persistence.OrderBy
 import javax.persistence.Table
 import javax.validation.constraints.NotNull
 
@@ -35,12 +36,17 @@ data class Account(
     val customer: Customer,
 
     @OneToMany(mappedBy = "account", targetEntity = Credit::class, fetch = FetchType.LAZY)
+    @OrderBy("id")
     val credits: List<Credit> = listOf(),
 
     @OneToMany(mappedBy = "account", targetEntity = Debit::class, fetch = FetchType.LAZY)
-    val debits: List<Debit> = listOf()
+    @OrderBy("id")
+    val debits: List<Debit> = listOf(),
 
-//    @OneToMany(mappedBy = "transference", targetEntity = Transference::class, fetch = FetchType.LAZY)
-//    val transfers: List<Transference> = listOf()
+    @OneToMany(mappedBy = "originAccount", targetEntity = Transference::class, fetch = FetchType.LAZY)
+    val originTransfers: List<Transference> = listOf(),
+
+    @OneToMany(mappedBy = "destinationAccount", targetEntity = Transference::class, fetch = FetchType.LAZY)
+    val destinationTransfers: List<Transference> = listOf()
 
 ) : DBEntity()
