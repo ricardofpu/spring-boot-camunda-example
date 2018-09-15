@@ -1,0 +1,9 @@
+## Backlog
+
+1 - Configure transactionId to unique in payment_transaction
+2 - Check DER
+3 - Create Order entity to each transactions
+4 - Create module model
+5 - Improve camunda workflow (new validations and handle alternative flow)
+6 - Create sequence diagram
+7 - Improve API design

@@ -3,6 +3,7 @@ package br.com.camunda.example.web.utils
 import br.com.camunda.example.api.v1.request.CreateCustomerRequest
 import br.com.camunda.example.api.v1.request.CreatePaymentRequest
 import br.com.camunda.example.api.v1.request.CreateTransferRequest
+import br.com.camunda.example.domain.enums.PaymentStatus
 import br.com.camunda.example.domain.enums.PaymentType
 import br.com.camunda.example.domain.enums.TransactionType
 import br.com.camunda.example.domain.model.Customer
@@ -24,6 +25,7 @@ fun CreatePaymentRequest.toModel(customer: Customer): PaymentTransaction =
         paymentAmount = this.payment?.amount!!,
         paymentScale = this.payment?.scale!!,
         paymentCurrency = this.payment?.currency!!,
+        status = PaymentStatus.PROCESSED,
         type = PaymentType.valueOf(this.type!!),
         transactionId = UUID.randomUUID().toString(),
         transactionType = TransactionType.valueOf(this.transactionType!!),

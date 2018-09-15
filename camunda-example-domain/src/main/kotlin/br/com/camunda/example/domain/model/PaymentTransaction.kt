@@ -38,6 +38,9 @@ data class PaymentTransaction(
 
     val paymentCurrency: String,
 
+    @Convert(converter = PaymentStatusConverter::class)
+    var status: PaymentStatus = PaymentStatus.PENDING,
+
     @Convert(converter = PaymentTypeConverter::class)
     val type: PaymentType,
 
@@ -50,9 +53,6 @@ data class PaymentTransaction(
     val destinationCustomerId: String? = null
 
 ) : DBEntity() {
-
-    @Convert(converter = PaymentStatusConverter::class)
-    var status: PaymentStatus = PaymentStatus.PROCESSED
 
     companion object {
         class PaymentTypeConverter : AttributeConverter<PaymentType, String> {

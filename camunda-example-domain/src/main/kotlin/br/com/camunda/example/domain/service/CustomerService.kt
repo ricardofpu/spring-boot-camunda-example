@@ -1,4 +1,4 @@
-package br.com.camunda.example.web.service
+package br.com.camunda.example.domain.service
 
 import br.com.camunda.example.domain.model.Customer
 
@@ -11,5 +11,7 @@ interface CustomerService {
     fun update(customer: Customer): Customer
 
     fun delete(customerId: String)
+
+    fun validateStatus(customerId: String)
 
 }

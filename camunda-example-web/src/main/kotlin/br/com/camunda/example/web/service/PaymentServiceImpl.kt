@@ -1,8 +1,9 @@
-package br.com.camunda.example.web.service.impl
+package br.com.camunda.example.web.service
 
+import br.com.camunda.example.domain.model.Customer
 import br.com.camunda.example.domain.model.PaymentTransaction
+import br.com.camunda.example.domain.service.PaymentService
 import br.com.camunda.example.repository.PaymentTransactionRepository
-import br.com.camunda.example.web.service.PaymentService
 import org.apache.logging.log4j.LogManager
 import org.springframework.stereotype.Service
 
@@ -13,10 +14,27 @@ class PaymentServiceImpl constructor(
 
     private val log = LogManager.getLogger(this.javaClass)
 
+    override fun findByTransactionId(transactionId: String): PaymentTransaction {
+        val result = repository.findByTransactionId(transactionId)
+
+        log.debug("Payment founded in database with values [{}]", result)
+        return result
+    }
+
     override fun save(paymentTransaction: PaymentTransaction): PaymentTransaction {
         val result = repository.save(paymentTransaction)
 
         log.debug("Payment saved in database with values [{}]", result)
+        return result
+    }
+
+    override fun update(paymentTransaction: PaymentTransaction): PaymentTransaction {
+        log.debug("Payment will be updated in database with values [{}]", paymentTransaction)
+
+        val result = repository.save(paymentTransaction)
+
+        log.debug("Payment updated in database with id {}", paymentTransaction.id)
+
         return result
     }
 

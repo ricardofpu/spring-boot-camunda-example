@@ -8,4 +8,7 @@ import org.springframework.stereotype.Repository
 interface PaymentTransactionRepository : JpaRepository<PaymentTransaction, String> {
 
     fun findByCustomerId(customerId: String): List<PaymentTransaction>
+
+    fun findByTransactionId(transactionId: String): PaymentTransaction
+
 }

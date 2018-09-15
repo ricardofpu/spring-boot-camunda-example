@@ -14,7 +14,7 @@ fun dummyCustomer() =
         email = "ricardoborges@test.com",
         gender = "MALE",
         phoneNumber = "3499998888",
-        birthDate = Date.from(Instant.now())
+        birthDate = Date(1992, 6, 29)
     )
 
 fun dummyPaymentTransaction(

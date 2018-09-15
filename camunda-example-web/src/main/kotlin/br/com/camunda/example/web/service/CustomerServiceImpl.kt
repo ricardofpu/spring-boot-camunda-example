@@ -1,10 +1,12 @@
-package br.com.camunda.example.web.service.impl
+package br.com.camunda.example.web.service
 
+import br.com.camunda.example.domain.enums.CustomerStatus
 import br.com.camunda.example.domain.model.Customer
+import br.com.camunda.example.domain.service.CustomerService
 import br.com.camunda.example.exception.handler.NotFoundException
 import br.com.camunda.example.exception.handler.error.ResourceValue
+import br.com.camunda.example.infrastructure.exception.InvalidCustomerStatusException
 import br.com.camunda.example.repository.CustomerRepository
-import br.com.camunda.example.web.service.CustomerService
 import org.apache.logging.log4j.LogManager
 import org.springframework.stereotype.Service
 import java.util.*
@@ -45,11 +47,24 @@ class CustomerServiceImpl constructor(
         log.debug("Customer delete in database with id {}", customer.id)
     }
 
+    override fun validateStatus(customerId: String) {
+        val customer = getCustomer(customerId)
+
+        this.validateStatus(customer)
+
+        log.debug("Customer validate status with id {}", customer.id)
+    }
 
     private fun getCustomer(id: String): Customer {
         return Optional.ofNullable(repository.findOne(id))
             .orElseThrow {
                 NotFoundException(ResourceValue(Customer::class.java, id))
             }
+    }
+
+    private fun validateStatus(customer: Customer) {
+        if (customer.status != CustomerStatus.ACTIVE) {
+            throw InvalidCustomerStatusException()
+        }
     }
 }
