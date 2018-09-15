@@ -1,10 +1,12 @@
 package br.com.camunda.example.domain
 
+import br.com.camunda.example.domain.enums.PaymentStatus
 import br.com.camunda.example.domain.enums.PaymentType
 import br.com.camunda.example.domain.model.Account
 import br.com.camunda.example.domain.model.Credit
 import br.com.camunda.example.domain.model.Customer
 import br.com.camunda.example.domain.model.Debit
+import br.com.camunda.example.domain.model.Transference
 import java.util.*
 
 const val EXCEPTION_TEST_FAILED_MESSAGE = "Your test failed because your business rule broke. Please check this."
@@ -20,14 +22,12 @@ fun dummyCustomer() =
     )
 
 fun dummyAccount(
-    id: String = randomUUID(),
     balanceAmount: Long = 1000,
     balanceScale: Int = 2,
     balanceCurrency: String = "BRL",
     customer: Customer = dummyCustomer()
 ): Account =
     Account(
-        id = id,
         balanceAmount = balanceAmount,
         balanceScale = balanceScale,
         balanceCurrency = balanceCurrency,
@@ -35,7 +35,6 @@ fun dummyAccount(
     )
 
 fun dummyDebit(
-    id: String = randomUUID(),
     origin: String = "ORIGIN",
     description: String? = "Description",
     priceAmount: Long = 1000,
@@ -46,7 +45,6 @@ fun dummyDebit(
     account: Account = dummyAccount()
 ): Debit =
     Debit(
-        id = id,
         priceAmount = priceAmount,
         priceScale = priceScale,
         priceCurrency = priceCurrency,
@@ -58,7 +56,6 @@ fun dummyDebit(
     )
 
 fun dummyCredit(
-    id: String = randomUUID(),
     origin: String = "ORIGIN",
     description: String? = "Description",
     valueAmount: Long = 1000,
@@ -69,7 +66,6 @@ fun dummyCredit(
     account: Account = dummyAccount()
 ): Credit =
     Credit(
-        id = id,
         valueAmount = valueAmount,
         valueScale = valueScale,
         valueCurrency = valueCurrency,
@@ -78,4 +74,25 @@ fun dummyCredit(
         origin = origin,
         type = type,
         account = account
+    )
+
+fun dummyTransference(
+    description: String? = "Description",
+    priceAmount: Long = 1000,
+    priceScale: Int = 2,
+    priceCurrency: String = "BRL",
+    transactionId: String = randomUUID(),
+    status: PaymentStatus = PaymentStatus.PENDING,
+    originAccount: Account = dummyAccount(),
+    destinationAccount: Account = dummyAccount()
+): Transference =
+    Transference(
+        priceAmount = priceAmount,
+        priceScale = priceScale,
+        priceCurrency = priceCurrency,
+        transactionId = transactionId,
+        description = description,
+        status = status,
+        originAccount = originAccount,
+        destinationAccount = destinationAccount
     )

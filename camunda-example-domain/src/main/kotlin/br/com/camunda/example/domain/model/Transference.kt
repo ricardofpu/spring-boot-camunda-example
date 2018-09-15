@@ -27,7 +27,7 @@ data class Transference(
 
     val transactionId: String,
 
-    val description: String,
+    val description: String? = null,
 
     val priceAmount: Long,
 
