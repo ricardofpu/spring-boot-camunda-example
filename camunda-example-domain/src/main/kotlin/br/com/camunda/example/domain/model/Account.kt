@@ -35,12 +35,12 @@ data class Account(
     val customer: Customer,
 
     @OneToMany(mappedBy = "account", targetEntity = Credit::class, fetch = FetchType.LAZY)
-    val credits: ArrayList<Credit> = arrayListOf(),
+    val credits: List<Credit> = listOf(),
 
     @OneToMany(mappedBy = "account", targetEntity = Debit::class, fetch = FetchType.LAZY)
-    val debits: ArrayList<Debit> = arrayListOf(),
+    val debits: List<Debit> = listOf()
 
-    @OneToMany(mappedBy = "account", targetEntity = Transference::class, fetch = FetchType.LAZY)
-    val transfers: ArrayList<Transference> = arrayListOf()
+//    @OneToMany(mappedBy = "transference", targetEntity = Transference::class, fetch = FetchType.LAZY)
+//    val transfers: List<Transference> = listOf()
 
 ) : DBEntity()

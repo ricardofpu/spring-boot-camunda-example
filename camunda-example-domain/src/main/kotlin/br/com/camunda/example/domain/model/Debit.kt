@@ -1,5 +1,6 @@
 package br.com.camunda.example.domain.model
 
+import br.com.camunda.example.domain.converter.PaymentTypeConverter
 import br.com.camunda.example.domain.entity.DBEntity
 import br.com.camunda.example.domain.enums.PaymentType
 import com.fasterxml.jackson.annotation.JsonIgnore
@@ -46,20 +47,4 @@ data class Debit(
     @NotNull
     val account: Account
 
-) : DBEntity() {
-
-    companion object {
-        class PaymentTypeConverter : AttributeConverter<PaymentType, String> {
-            override fun convertToDatabaseColumn(paymentType: PaymentType): String {
-                return paymentType.name
-            }
-
-            override fun convertToEntityAttribute(value: String?): PaymentType? {
-                return if (value == null) null else Arrays.stream(PaymentType.values())
-                    .filter { p -> p.name == value }
-                    .findFirst()
-                    .orElseThrow { IllegalArgumentException() }
-            }
-        }
-    }
-}
+) : DBEntity()

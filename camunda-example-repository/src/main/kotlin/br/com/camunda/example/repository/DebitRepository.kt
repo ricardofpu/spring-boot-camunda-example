@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository
 @Repository
 interface DebitRepository : JpaRepository<Debit, String> {
 
-    fun findByCustomerId(customerId: String): List<Debit>
+    fun findByAccountId(accountId: String): List<Debit>
 
     fun findByTransactionId(transactionId: String): Debit
 

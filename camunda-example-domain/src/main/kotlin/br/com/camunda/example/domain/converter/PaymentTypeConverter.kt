@@ -4,7 +4,7 @@ import br.com.camunda.example.domain.enums.PaymentType
 import java.util.*
 import javax.persistence.AttributeConverter
 
-object PaymentTypeConverter : AttributeConverter<PaymentType, String> {
+open class PaymentTypeConverter : AttributeConverter<PaymentType, String> {
     override fun convertToDatabaseColumn(paymentType: PaymentType): String {
         return paymentType.name
     }
