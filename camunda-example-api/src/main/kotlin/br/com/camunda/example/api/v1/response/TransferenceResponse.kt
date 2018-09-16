@@ -1,32 +1,33 @@
 package br.com.camunda.example.api.v1.response
 
 import com.fasterxml.jackson.annotation.JsonInclude
+import java.util.*
 
 /**
- * Debit Response
+ * Transference Response
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-data class DebitResponse(
+data class TransferenceResponse(
 
     /**
-     * Identify an unique to debit
+     * Identify an unique to transference
      */
     val id: String?,
 
     /**
-     * Account id
+     * Origin account id
      */
-    val accountId: String?,
+    val originAccountId: String?,
+
+    /**
+     * Destination account id
+     */
+    val destinationAccountId: String?,
 
     /**
      * Transaction id
      */
     val transactionId: String?,
-
-    /**
-     * Origin
-     */
-    val origin: String?,
 
     /**
      * Description
@@ -39,14 +40,24 @@ data class DebitResponse(
     val price: Price?,
 
     /**
-     * Type
+     * Status
      */
-    val type: String?
+    val status: String?,
+
+    /**
+     * Reason of reverse
+     */
+    val reason: String?,
+
+    /**
+     * Reversed at
+     */
+    val reversedAt: Date?
 
 ) {
 
     /**
-     * Value
+     * Price
      */
     data class Price(
 
@@ -56,7 +67,7 @@ data class DebitResponse(
         val amount: Long,
 
         /**
-         * Scale
+         * Scale that will be applied to amount
          */
         val scale: Int,
 

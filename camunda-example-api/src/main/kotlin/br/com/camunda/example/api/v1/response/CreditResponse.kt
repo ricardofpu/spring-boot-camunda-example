@@ -1,14 +1,22 @@
 package br.com.camunda.example.api.v1.response
 
+import com.fasterxml.jackson.annotation.JsonInclude
+
 /**
  * Credit Response
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 data class CreditResponse(
 
     /**
      * Identify an unique to credit
      */
     val id: String?,
+
+    /**
+     * Account id
+     */
+    val accountId: String?,
 
     /**
      * Transaction id
@@ -28,7 +36,12 @@ data class CreditResponse(
     /**
      * Value of credit
      */
-    val value: Value?
+    val value: Value?,
+
+    /**
+     * Type
+     */
+    val type: String?
 
 ) {
 

@@ -1,9 +1,14 @@
 package br.com.camunda.example.api.v1
 
 import br.com.camunda.example.api.v1.request.CreateAccountRequest
+import br.com.camunda.example.api.v1.request.CreateCreditRequest
+import br.com.camunda.example.api.v1.request.CreateDebitRequest
 import br.com.camunda.example.api.v1.request.CreateTransferRequest
+import br.com.camunda.example.api.v1.request.CreateTransferenceRequest
 import br.com.camunda.example.api.v1.response.AccountResponse
-import br.com.camunda.example.api.v1.response.PaymentResponse
+import br.com.camunda.example.api.v1.response.CreditResponse
+import br.com.camunda.example.api.v1.response.DebitResponse
+import br.com.camunda.example.api.v1.response.TransferenceResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.PathVariable
@@ -29,27 +34,40 @@ interface AccountApi {
     fun create(@RequestBody @Valid request: CreateAccountRequest): AccountResponse
 
     /**
-     * Create Account
-     * @param id Identify an unique to account that will receive debit
+     * Perform debit
+     * @param id Identify an unique to account that will be debited
      */
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     @PostMapping("/{id}/debits")
     fun debit(
         @PathVariable("id") id: String,
-        @RequestBody @Valid request: CreateAccountRequest
-    ): AccountResponse
+        @RequestBody @Valid request: CreateDebitRequest
+    ): DebitResponse
+
 
     /**
-     * Create Transfer
-     * @param customerId Identify an unique to customer that will do transference
+     * Perform credit
+     * @param id Identify an unique to account that will receive credit
      */
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    @PostMapping("/transfers/customers/{customerId}")
+    @PostMapping("/{id}/credits")
+    fun credit(
+        @PathVariable("id") id: String,
+        @RequestBody @Valid request: CreateCreditRequest
+    ): CreditResponse
+
+    /**
+     * Transference
+     * @param id Identify an unique to account that will do transference
+     */
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    @PostMapping("/{id}/transfers")
     fun transference(
-        @PathVariable("customerId") customerId: String,
-        @RequestBody @Valid request: CreateTransferRequest
-    ): PaymentResponse
+        @PathVariable("id") id: String,
+        @RequestBody @Valid request: CreateTransferenceRequest
+    ): TransferenceResponse
 
 }
