@@ -2,6 +2,7 @@ package br.com.camunda.example.web.controller.v1
 
 import br.com.camunda.example.api.v1.response.AccountResponse
 import br.com.camunda.example.api.v1.response.CreditResponse
+import br.com.camunda.example.api.v1.response.DebitResponse
 import br.com.camunda.example.domain.enums.PaymentType
 import br.com.camunda.example.infrastructure.jsonToObject
 import br.com.camunda.example.infrastructure.objectToJson
@@ -102,6 +103,53 @@ class AccountControllerTest : ControllerBaseTest() {
             .andDo {
                 val response = it.response.contentAsString.jsonToObject(AccountResponse::class.java)
                 val balance = (account.balance?.amount!! + request.value?.amount!!)
+                assertNotNull(response)
+                assertEquals(account.id, response.id)
+                assertEquals(account.customerId, response.customerId)
+                assertEquals(balance, response.balance?.amount)
+                assertEquals(account.balance?.scale, response.balance?.scale)
+                assertEquals(account.balance?.currency, response.balance?.currency)
+            }
+    }
+
+    @Test
+    fun `should perform debit in account`() {
+        val account = requestToCreateAccount()
+
+        val request = buildCreateDebitRequest()
+
+        //Perform debit
+        this.mockMvc.perform(
+            post(
+                "/v1/accounts/{id}/debits", account.id
+            )
+                .content(request.objectToJson())
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isCreated)
+            .andDo {
+                val response = it.response.contentAsString.jsonToObject(DebitResponse::class.java)
+                assertNotNull(response)
+                assertEquals(account.id, response.accountId)
+                assertEquals(request.price?.amount, response.price?.amount)
+                assertEquals(request.price?.scale, response.price?.scale)
+                assertEquals(request.price?.currency, response.price?.currency)
+                assertEquals(request.transactionId, response.transactionId)
+                assertEquals(request.origin, response.origin)
+                assertEquals(request.description, response.description)
+                assertEquals(PaymentType.DEBIT.name, response.type)
+            }
+
+        //Validate new balance
+        this.mockMvc.perform(
+            get(
+                "/v1/accounts/{id}", account.id
+            )
+        )
+            .andExpect(status().isOk)
+            .andDo {
+                val response = it.response.contentAsString.jsonToObject(AccountResponse::class.java)
+                val balance = (account.balance?.amount!! - request.price?.amount!!)
                 assertNotNull(response)
                 assertEquals(account.id, response.id)
                 assertEquals(account.customerId, response.customerId)

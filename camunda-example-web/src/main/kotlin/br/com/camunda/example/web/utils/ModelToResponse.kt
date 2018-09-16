@@ -3,9 +3,11 @@ package br.com.camunda.example.web.utils
 import br.com.camunda.example.api.v1.response.AccountResponse
 import br.com.camunda.example.api.v1.response.CreditResponse
 import br.com.camunda.example.api.v1.response.CustomerResponse
+import br.com.camunda.example.api.v1.response.DebitResponse
 import br.com.camunda.example.domain.model.Account
 import br.com.camunda.example.domain.model.Credit
 import br.com.camunda.example.domain.model.Customer
+import br.com.camunda.example.domain.model.Debit
 
 fun Customer.toResponse(): CustomerResponse =
     CustomerResponse(
@@ -42,5 +44,20 @@ fun Credit.toResponse(): CreditResponse =
             amount = this.valueAmount,
             scale = this.valueScale,
             currency = this.valueCurrency
+        )
+    )
+
+fun Debit.toResponse(): DebitResponse =
+    DebitResponse(
+        id = this.id,
+        transactionId = this.transactionId,
+        origin = this.origin,
+        description = this.description,
+        type = this.type.name,
+        accountId = this.account.id,
+        price = DebitResponse.Price(
+            amount = this.priceAmount,
+            scale = this.priceScale,
+            currency = this.priceCurrency
         )
     )

@@ -3,7 +3,7 @@ package br.com.camunda.example.web
 import br.com.camunda.example.api.v1.request.CreateAccountRequest
 import br.com.camunda.example.api.v1.request.CreateCreditRequest
 import br.com.camunda.example.api.v1.request.CreateCustomerRequest
-import br.com.camunda.example.api.v1.request.CreatePaymentRequest
+import br.com.camunda.example.api.v1.request.CreateDebitRequest
 import br.com.camunda.example.api.v1.request.UpdateCustomerRequest
 import br.com.camunda.example.api.v1.response.AccountResponse
 import br.com.camunda.example.api.v1.response.CustomerResponse
@@ -230,15 +230,16 @@ abstract class ControllerBaseTest {
             )
         )
 
-    protected fun buildCreatePaymentRequest() =
-        CreatePaymentRequest(
-            payment = CreatePaymentRequest.Payment(
-                amount = 1000,
+    protected fun buildCreateDebitRequest(): CreateDebitRequest =
+        CreateDebitRequest(
+            transactionId = randomUUID(),
+            description = "CREDIT",
+            origin = "ORIGIN_APP",
+            price = CreateDebitRequest.Price(
+                amount = 500,
                 scale = 2,
                 currency = "BRL"
-            ),
-            type = "CREDIT",
-            transactionType = "PAYMENT"
+            )
         )
 
 }

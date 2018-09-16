@@ -2,12 +2,16 @@ package br.com.camunda.example.web.service
 
 import br.com.camunda.example.domain.model.Account
 import br.com.camunda.example.domain.model.Credit
+import br.com.camunda.example.domain.model.Debit
 import br.com.camunda.example.domain.service.AccountService
 import br.com.camunda.example.domain.service.CustomerService
+import br.com.camunda.example.exception.handler.BusinessException
 import br.com.camunda.example.exception.handler.NotFoundException
 import br.com.camunda.example.exception.handler.error.ResourceValue
+import br.com.camunda.example.infrastructure.exception.CamundaExampleErrorCode
 import br.com.camunda.example.repository.AccountRepository
 import br.com.camunda.example.repository.CreditRepository
+import br.com.camunda.example.repository.DebitRepository
 import org.apache.logging.log4j.LogManager
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
@@ -18,6 +22,7 @@ open class AccountServiceImpl constructor(
     private val customerRepository: AccountRepository,
     private val accountRepository: AccountRepository,
     private val creditRepository: CreditRepository,
+    private val debitRepository: DebitRepository,
     private val customerService: CustomerService
 ) : AccountService {
 
@@ -66,6 +71,35 @@ open class AccountServiceImpl constructor(
         log.debug("Credit saved in database with id {}", result.id)
 
         return result
+    }
+
+    //TODO: Improve a lock to balance and avoid concurrency
+    //TODO: Validate debit currency with account currency
+    override fun saveDebit(debit: Debit): Debit {
+        log.debug("Debit will be saved in database with values [{}]", debit)
+
+        customerService.validateStatus(debit.account.customer.id)//TODO: handle exception and throw BusinessException
+
+        val result = debitRepository.save(debit)
+
+        this.removeBalanceByAccountId(debit)
+
+        log.debug("Credit saved in database with id {}", result.id)
+
+        return result
+    }
+
+    private fun removeBalanceByAccountId(debit: Debit) {
+        val debitPrice = debit.getPrice()
+        val account = getAccount(debit.account.id)
+        val balance = account.getBalance()
+        val newBalance = (balance.minus(debitPrice))
+
+        if (newBalance < BigDecimal.ZERO) {
+            throw BusinessException(CamundaExampleErrorCode.INSUFFICIENT_BALANCE_EXCEPTION)
+        }
+
+        accountRepository.updateBalanceAmountByAccountId(account.id, convertBalanceToScaleTwo(newBalance).toLong())
     }
 
 

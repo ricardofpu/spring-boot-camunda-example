@@ -3,10 +3,12 @@ package br.com.camunda.example.web.utils
 import br.com.camunda.example.api.v1.request.CreateAccountRequest
 import br.com.camunda.example.api.v1.request.CreateCreditRequest
 import br.com.camunda.example.api.v1.request.CreateCustomerRequest
+import br.com.camunda.example.api.v1.request.CreateDebitRequest
 import br.com.camunda.example.api.v1.request.UpdateCustomerRequest
 import br.com.camunda.example.domain.model.Account
 import br.com.camunda.example.domain.model.Credit
 import br.com.camunda.example.domain.model.Customer
+import br.com.camunda.example.domain.model.Debit
 
 fun CreateCustomerRequest.toModel(): Customer =
     Customer(
@@ -45,5 +47,16 @@ fun CreateCreditRequest.toModel(account: Account): Credit =
         valueAmount = this.value?.amount!!,
         valueScale = this.value?.scale!!,
         valueCurrency = this.value?.currency!!,
+        account = account
+    )
+
+fun CreateDebitRequest.toModel(account: Account): Debit =
+    Debit(
+        transactionId = this.transactionId,
+        origin = this.origin,
+        description = this.description,
+        priceAmount = this.price?.amount!!,
+        priceScale = this.price?.scale!!,
+        priceCurrency = this.price?.currency!!,
         account = account
     )

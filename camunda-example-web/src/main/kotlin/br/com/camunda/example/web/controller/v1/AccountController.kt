@@ -54,7 +54,10 @@ class AccountController constructor(
         @PathVariable("id") id: String,
         @RequestBody @Valid request: CreateDebitRequest
     ): DebitResponse {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val account = accountService.findById(id)
+        val debit = request.toModel(account)
+        val result = accountService.saveDebit(debit)
+        return result.toResponse()
     }
 
     /**
