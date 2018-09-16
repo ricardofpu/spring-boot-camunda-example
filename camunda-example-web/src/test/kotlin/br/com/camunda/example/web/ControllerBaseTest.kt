@@ -2,6 +2,7 @@ package br.com.camunda.example.web
 
 import br.com.camunda.example.api.v1.request.CreateCustomerRequest
 import br.com.camunda.example.api.v1.request.CreatePaymentRequest
+import br.com.camunda.example.api.v1.request.UpdateCustomerRequest
 import br.com.camunda.example.api.v1.response.CustomerResponse
 import br.com.camunda.example.infrastructure.jsonToObject
 import br.com.camunda.example.infrastructure.objectToJson
@@ -39,7 +40,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
-import java.time.Instant
+import java.text.SimpleDateFormat
 import java.util.*
 import javax.annotation.PostConstruct
 
@@ -158,7 +159,24 @@ abstract class ControllerBaseTest {
             gender = "MALE",
             phoneNumber = "3499999999",
             email = "ricardo@test.com",
-            birthDate = Date.from(Instant.now())
+            birthDate = SimpleDateFormat("yyyy-MM-dd").parse("1992-06-29")
+        )
+
+    protected fun buildUpdateCustomerRequest(
+        fullName: String = "Ricardo Borges",
+        nickName: String = "Ricardo",
+        gender: String = "MALE",
+        phoneNumber: String = "3499999999",
+        email: String = "ricardo@test.com",
+        birthDate: Date = SimpleDateFormat("yyyy-MM-dd").parse("1992-06-29")
+    ): UpdateCustomerRequest =
+        UpdateCustomerRequest(
+            fullName = fullName,
+            nickName = nickName,
+            gender = gender,
+            phoneNumber = phoneNumber,
+            email = email,
+            birthDate = birthDate
         )
 
     protected fun buildCreatePaymentRequest() =

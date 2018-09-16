@@ -2,7 +2,10 @@ package br.com.camunda.example.domain.model
 
 import br.com.camunda.example.domain.entity.DBEntity
 import com.fasterxml.jackson.annotation.JsonIgnore
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.GenericGenerator
+import java.util.*
 import javax.persistence.Entity
 import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
@@ -44,9 +47,11 @@ data class Account(
     val debits: List<Debit> = listOf(),
 
     @OneToMany(mappedBy = "originAccount", targetEntity = Transference::class, fetch = FetchType.LAZY)
+    @OrderBy("id")
     val originTransfers: List<Transference> = listOf(),
 
     @OneToMany(mappedBy = "destinationAccount", targetEntity = Transference::class, fetch = FetchType.LAZY)
+    @OrderBy("id")
     val destinationTransfers: List<Transference> = listOf()
 
 ) : DBEntity()

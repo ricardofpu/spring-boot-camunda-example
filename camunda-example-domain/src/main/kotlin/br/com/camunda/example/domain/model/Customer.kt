@@ -3,6 +3,7 @@ package br.com.camunda.example.domain.model
 import br.com.camunda.example.domain.entity.DBEntity
 import br.com.camunda.example.domain.enums.CustomerStatus
 import org.hibernate.annotations.GenericGenerator
+import org.springframework.format.annotation.DateTimeFormat
 import java.util.*
 import javax.persistence.AttributeConverter
 import javax.persistence.Convert
@@ -32,7 +33,7 @@ data class Customer(
 
     val email: String?,
 
-    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     val birthDate: Date,
 
     val gender: String

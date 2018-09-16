@@ -6,9 +6,9 @@ import javax.validation.constraints.NotNull
 import javax.validation.constraints.Pattern
 
 /**
- * Create Customer Request
+ * Update Customer Request
  */
-data class CreateCustomerRequest(
+data class UpdateCustomerRequest(
 
     /**
      * Customer full name

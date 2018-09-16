@@ -32,6 +32,11 @@ class CustomerServiceImpl constructor(
     override fun update(customer: Customer): Customer {
         log.debug("Customer will be updated in database with values [{}]", customer)
 
+        val oldCustomer = getCustomer(customer.id)
+
+        customer.status = oldCustomer.status
+        customer.createdAt = oldCustomer.createdAt
+
         val result = repository.save(customer)
 
         log.debug("Customer updated in database with id {}", customer.id)
