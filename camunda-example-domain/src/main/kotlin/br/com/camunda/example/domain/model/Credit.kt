@@ -1,11 +1,11 @@
 package br.com.camunda.example.domain.model
 
 import br.com.camunda.example.domain.converter.PaymentTypeConverter
-import br.com.camunda.example.domain.entity.DBEntity
 import br.com.camunda.example.domain.entity.DBEntityOnlyCreate
 import br.com.camunda.example.domain.enums.PaymentType
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.GenericGenerator
+import java.math.BigDecimal
 import javax.persistence.Convert
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -38,7 +38,7 @@ data class Credit(
     val valueCurrency: String,
 
     @Convert(converter = PaymentTypeConverter::class)
-    val type: PaymentType,
+    val type: PaymentType = PaymentType.CREDIT,
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
@@ -46,4 +46,7 @@ data class Credit(
     @NotNull
     val account: Account
 
-) : DBEntityOnlyCreate()
+) : DBEntityOnlyCreate() {
+
+    fun getValue(): BigDecimal = BigDecimal.valueOf(valueAmount, valueScale)
+}

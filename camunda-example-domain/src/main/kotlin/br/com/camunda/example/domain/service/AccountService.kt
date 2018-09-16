@@ -1,6 +1,7 @@
 package br.com.camunda.example.domain.service
 
 import br.com.camunda.example.domain.model.Account
+import br.com.camunda.example.domain.model.Credit
 
 interface AccountService {
 
@@ -12,5 +13,6 @@ interface AccountService {
 
     fun delete(id: String)
 
+    fun saveCredit(credit: Credit): Credit
 
 }

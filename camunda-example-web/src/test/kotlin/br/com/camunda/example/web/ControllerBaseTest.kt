@@ -1,9 +1,13 @@
 package br.com.camunda.example.web
 
+import br.com.camunda.example.api.v1.request.CreateAccountRequest
+import br.com.camunda.example.api.v1.request.CreateCreditRequest
 import br.com.camunda.example.api.v1.request.CreateCustomerRequest
 import br.com.camunda.example.api.v1.request.CreatePaymentRequest
 import br.com.camunda.example.api.v1.request.UpdateCustomerRequest
+import br.com.camunda.example.api.v1.response.AccountResponse
 import br.com.camunda.example.api.v1.response.CustomerResponse
+import br.com.camunda.example.domain.randomUUID
 import br.com.camunda.example.infrastructure.jsonToObject
 import br.com.camunda.example.infrastructure.objectToJson
 import br.com.camunda.example.web.config.ApplicationConfigTest
@@ -152,6 +156,28 @@ abstract class ControllerBaseTest {
         return response.response.contentAsString.jsonToObject(CustomerResponse::class.java)
     }
 
+    protected fun requestToCreateAccount(
+        customerRequest: CreateCustomerRequest = buildCreateCustomerRequest()
+    ): AccountResponse {
+
+        val customer = requestToCreateCustomer(customerRequest)
+
+        val request = buildCreateAccountRequest(customerId = customer.id!!)
+
+        val response = this.mockMvc.perform(
+            post(
+                "/v1/accounts"
+            )
+                .content(request.objectToJson())
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+        )
+            .andExpect(status().isCreated)
+            .andExpect(jsonPath("$.id", CoreMatchers.notNullValue()))
+            .andReturn()
+
+        return response.response.contentAsString.jsonToObject(AccountResponse::class.java)
+    }
+
     protected fun buildCreateCustomerRequest() =
         CreateCustomerRequest(
             fullName = "Ricardo Borges",
@@ -177,6 +203,31 @@ abstract class ControllerBaseTest {
             phoneNumber = phoneNumber,
             email = email,
             birthDate = birthDate
+        )
+
+    protected fun buildCreateAccountRequest(
+        customerId: String = randomUUID(),
+        initialBalance: CreateAccountRequest.Balance = CreateAccountRequest.Balance(
+            amount = 1000,
+            scale = 2,
+            currency = "BRL"
+        )
+    ): CreateAccountRequest =
+        CreateAccountRequest(
+            customerId = customerId,
+            initialBalance = initialBalance
+        )
+
+    protected fun buildCreateCreditRequest(): CreateCreditRequest =
+        CreateCreditRequest(
+            transactionId = randomUUID(),
+            description = "CREDIT",
+            origin = "ORIGIN_APP",
+            value = CreateCreditRequest.Value(
+                amount = 2000,
+                scale = 2,
+                currency = "BRL"
+            )
         )
 
     protected fun buildCreatePaymentRequest() =

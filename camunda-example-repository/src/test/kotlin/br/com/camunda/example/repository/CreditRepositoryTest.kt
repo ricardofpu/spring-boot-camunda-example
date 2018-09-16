@@ -14,7 +14,7 @@ class CreditRepositoryTest : RepositoryBaseTest() {
 
     @Test
     fun `should save credit and then find by id`() {
-        val account = creatAccount()
+        val account = createAccount()
 
         val credit = dummyCredit(account = account)
 
@@ -35,7 +35,7 @@ class CreditRepositoryTest : RepositoryBaseTest() {
 
     @Test
     fun `should save credit and then find by account id`() {
-        val account = creatAccount()
+        val account = createAccount()
 
         val credit = dummyCredit(account = account)
 
@@ -49,7 +49,7 @@ class CreditRepositoryTest : RepositoryBaseTest() {
 
     @Test
     fun `should save credit and then find by transaction id`() {
-        val account = creatAccount()
+        val account = createAccount()
 
         val credit = dummyCredit(account = account)
 
@@ -70,7 +70,7 @@ class CreditRepositoryTest : RepositoryBaseTest() {
 
     @Test(expected = DataIntegrityViolationException::class)
     fun `shouldn't save credit when transaction id is duplicated`() {
-        val account = creatAccount()
+        val account = createAccount()
 
         val firstCredit = dummyCredit(account = account)
 

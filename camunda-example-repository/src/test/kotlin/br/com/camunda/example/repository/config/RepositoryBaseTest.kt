@@ -50,7 +50,7 @@ abstract class RepositoryBaseTest {
         return saved
     }
 
-    protected fun creatAccount(customer: Customer = dummyCustomer()): Account {
+    protected fun createAccount(customer: Customer = dummyCustomer()): Account {
         val savedCustomer = createCustomer(customer)
         val account = dummyAccount(customer = savedCustomer)
 

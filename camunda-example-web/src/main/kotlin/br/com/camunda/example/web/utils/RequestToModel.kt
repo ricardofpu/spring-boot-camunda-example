@@ -1,7 +1,11 @@
 package br.com.camunda.example.web.utils
 
+import br.com.camunda.example.api.v1.request.CreateAccountRequest
+import br.com.camunda.example.api.v1.request.CreateCreditRequest
 import br.com.camunda.example.api.v1.request.CreateCustomerRequest
 import br.com.camunda.example.api.v1.request.UpdateCustomerRequest
+import br.com.camunda.example.domain.model.Account
+import br.com.camunda.example.domain.model.Credit
 import br.com.camunda.example.domain.model.Customer
 
 fun CreateCustomerRequest.toModel(): Customer =
@@ -25,26 +29,21 @@ fun UpdateCustomerRequest.toModel(id: String): Customer =
         birthDate = this.birthDate!!
     )
 
-//fun CreatePaymentRequest.toModel(customer: Customer): PaymentTransaction =
-//    PaymentTransaction(
-//        paymentAmount = this.payment?.amount!!,
-//        paymentScale = this.payment?.scale!!,
-//        paymentCurrency = this.payment?.currency!!,
-//        status = PaymentStatus.PROCESSED,
-//        type = PaymentType.valueOf(this.type!!),
-//        transactionId = UUID.randomUUID().toString(),
-//        transactionType = TransactionType.valueOf(this.transactionType!!),
-//        customer = customer
-//    )
-//
-//fun CreateTransferRequest.toModel(customer: Customer): PaymentTransaction =
-//    PaymentTransaction(
-//        paymentAmount = this.transferenceValue?.amount!!,
-//        paymentScale = this.transferenceValue?.scale!!,
-//        paymentCurrency = this.transferenceValue?.currency!!,
-//        type = PaymentType.DEBIT,
-//        transactionId = UUID.randomUUID().toString(),
-//        transactionType = TransactionType.TRANSFER,
-//        customer = customer,
-//        destinationCustomerId = this.destinationCustomerId
-//    )
+fun CreateAccountRequest.toModel(customer: Customer): Account =
+    Account(
+        balanceAmount = this.initialBalance?.amount!!,
+        balanceScale = this.initialBalance?.scale!!,
+        balanceCurrency = this.initialBalance?.currency!!,
+        customer = customer
+    )
+
+fun CreateCreditRequest.toModel(account: Account): Credit =
+    Credit(
+        transactionId = this.transactionId,
+        origin = this.origin,
+        description = this.description,
+        valueAmount = this.value?.amount!!,
+        valueScale = this.value?.scale!!,
+        valueCurrency = this.value?.currency!!,
+        account = account
+    )

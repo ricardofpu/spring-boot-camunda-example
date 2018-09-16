@@ -14,8 +14,8 @@ class TransferenceRepositoryTest : RepositoryBaseTest() {
 
     @Test
     fun `should save transference and then find by id`() {
-        val originAccount = creatAccount()
-        val destinationAccount = creatAccount()
+        val originAccount = createAccount()
+        val destinationAccount = createAccount()
 
         val transference = dummyTransference(
             originAccount = originAccount,
@@ -43,8 +43,8 @@ class TransferenceRepositoryTest : RepositoryBaseTest() {
 
     @Test
     fun `should save transference and then find by origin account id`() {
-        val originAccount = creatAccount()
-        val destinationAccount = creatAccount()
+        val originAccount = createAccount()
+        val destinationAccount = createAccount()
 
         val transference = dummyTransference(
             originAccount = originAccount,
@@ -72,8 +72,8 @@ class TransferenceRepositoryTest : RepositoryBaseTest() {
 
     @Test
     fun `should save transference and then find by destination account id`() {
-        val originAccount = creatAccount()
-        val destinationAccount = creatAccount()
+        val originAccount = createAccount()
+        val destinationAccount = createAccount()
 
         val transference = dummyTransference(
             originAccount = originAccount,
@@ -101,8 +101,8 @@ class TransferenceRepositoryTest : RepositoryBaseTest() {
 
     @Test
     fun `should save transference and then find by transaction id`() {
-        val originAccount = creatAccount()
-        val destinationAccount = creatAccount()
+        val originAccount = createAccount()
+        val destinationAccount = createAccount()
 
         val transference = dummyTransference(
             originAccount = originAccount,
@@ -130,8 +130,8 @@ class TransferenceRepositoryTest : RepositoryBaseTest() {
 
     @Test
     fun `should find all transfers by origin account id`() {
-        val originAccount = creatAccount()
-        val destinationAccount = creatAccount()
+        val originAccount = createAccount()
+        val destinationAccount = createAccount()
 
         val transference1 = dummyTransference(
             originAccount = originAccount,
@@ -157,8 +157,8 @@ class TransferenceRepositoryTest : RepositoryBaseTest() {
 
     @Test
     fun `should find all transfers by destination account id`() {
-        val originAccount = creatAccount()
-        val destinationAccount = creatAccount()
+        val originAccount = createAccount()
+        val destinationAccount = createAccount()
 
         val transference1 = dummyTransference(
             originAccount = originAccount,
@@ -185,8 +185,8 @@ class TransferenceRepositoryTest : RepositoryBaseTest() {
 
     @Test(expected = DataIntegrityViolationException::class)
     fun `shouldn't save transference when transaction id is duplicated`() {
-        val originAccount = creatAccount()
-        val destinationAccount = creatAccount()
+        val originAccount = createAccount()
+        val destinationAccount = createAccount()
 
         val firstTransference = dummyTransference(
             originAccount = originAccount,

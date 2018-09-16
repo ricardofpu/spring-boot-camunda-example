@@ -2,10 +2,8 @@ package br.com.camunda.example.domain.model
 
 import br.com.camunda.example.domain.entity.DBEntity
 import com.fasterxml.jackson.annotation.JsonIgnore
-import org.hibernate.annotations.Fetch
-import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.GenericGenerator
-import java.util.*
+import java.math.BigDecimal
 import javax.persistence.Entity
 import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
@@ -54,4 +52,7 @@ data class Account(
     @OrderBy("id")
     val destinationTransfers: List<Transference> = listOf()
 
-) : DBEntity()
+) : DBEntity() {
+
+    fun getBalance(): BigDecimal = BigDecimal.valueOf(balanceAmount, balanceScale)
+}

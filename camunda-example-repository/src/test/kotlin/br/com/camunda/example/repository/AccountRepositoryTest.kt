@@ -52,4 +52,36 @@ class AccountRepositoryTest : RepositoryBaseTest() {
         assertNull(find)
     }
 
+    @Test
+    fun `should update balance amount by account id`() {
+        val account = createAccount()
+
+        val oldBalanceAmount = account.balanceAmount
+        assertEquals(1000, oldBalanceAmount)
+
+        val updated = accountRepository.updateBalanceAmountByAccountId(
+            id = account.id,
+            newBalance = 3000
+        )
+        assertEquals(1, updated)
+
+        val find = accountRepository.findOne(account.id)
+        assertNotNull(find)
+        assertEquals(3000, find.balanceAmount)
+    }
+
+    @Test
+    fun `shouldn't update balance amount by account id when id not exists`() {
+        val accountId = randomUUID()
+
+        val updated = accountRepository.updateBalanceAmountByAccountId(
+            id = accountId,
+            newBalance = 3000
+        )
+        assertEquals(0, updated)
+
+        val find = accountRepository.findOne(accountId)
+        assertNull(find)
+    }
+
 }

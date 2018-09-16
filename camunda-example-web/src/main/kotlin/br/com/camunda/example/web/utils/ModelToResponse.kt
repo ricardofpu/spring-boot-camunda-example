@@ -1,6 +1,10 @@
 package br.com.camunda.example.web.utils
 
+import br.com.camunda.example.api.v1.response.AccountResponse
+import br.com.camunda.example.api.v1.response.CreditResponse
 import br.com.camunda.example.api.v1.response.CustomerResponse
+import br.com.camunda.example.domain.model.Account
+import br.com.camunda.example.domain.model.Credit
 import br.com.camunda.example.domain.model.Customer
 
 fun Customer.toResponse(): CustomerResponse =
@@ -15,17 +19,28 @@ fun Customer.toResponse(): CustomerResponse =
         birthDate = this.birthDate
     )
 
-//fun PaymentTransaction.toResponse(): PaymentResponse =
-//    PaymentResponse(
-//        id = this.id,
-//        payment = PaymentResponse.Payment(
-//            amount = this.paymentAmount,
-//            scale = this.paymentScale,
-//            currency = this.paymentCurrency
-//        ),
-//        transactionId = this.transactionId,
-//        transactionType = this.transactionType.name,
-//        type = this.type.name,
-//        status = this.status.name,
-//        destinationCustomerId = this.destinationCustomerId
-//    )
+fun Account.toResponse(): AccountResponse =
+    AccountResponse(
+        id = this.id,
+        customerId = this.customer.id,
+        balance = AccountResponse.Balance(
+            amount = this.balanceAmount,
+            scale = this.balanceScale,
+            currency = this.balanceCurrency
+        )
+    )
+
+fun Credit.toResponse(): CreditResponse =
+    CreditResponse(
+        id = this.id,
+        transactionId = this.transactionId,
+        origin = this.origin,
+        description = this.description,
+        type = this.type.name,
+        accountId = this.account.id,
+        value = CreditResponse.Value(
+            amount = this.valueAmount,
+            scale = this.valueScale,
+            currency = this.valueCurrency
+        )
+    )

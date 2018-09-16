@@ -14,7 +14,7 @@ class DebitRepositoryTest : RepositoryBaseTest() {
 
     @Test
     fun `should save debit and then find by id`() {
-        val account = creatAccount()
+        val account = createAccount()
 
         val debit = dummyDebit(account = account)
 
@@ -35,7 +35,7 @@ class DebitRepositoryTest : RepositoryBaseTest() {
 
     @Test
     fun `should save debit and then find by account id`() {
-        val account = creatAccount()
+        val account = createAccount()
 
         val debit = dummyDebit(account = account)
 
@@ -49,7 +49,7 @@ class DebitRepositoryTest : RepositoryBaseTest() {
 
     @Test
     fun `should save debit and then find by transaction id`() {
-        val account = creatAccount()
+        val account = createAccount()
 
         val debit = dummyDebit(account = account)
 
@@ -70,7 +70,7 @@ class DebitRepositoryTest : RepositoryBaseTest() {
 
     @Test(expected = DataIntegrityViolationException::class)
     fun `shouldn't save debit when transaction id is duplicated`() {
-        val account = creatAccount()
+        val account = createAccount()
 
         val firstDebit = dummyDebit(account = account)
 
