@@ -4,10 +4,12 @@ import br.com.camunda.example.api.v1.response.AccountResponse
 import br.com.camunda.example.api.v1.response.CreditResponse
 import br.com.camunda.example.api.v1.response.CustomerResponse
 import br.com.camunda.example.api.v1.response.DebitResponse
+import br.com.camunda.example.api.v1.response.TransferenceResponse
 import br.com.camunda.example.domain.model.Account
 import br.com.camunda.example.domain.model.Credit
 import br.com.camunda.example.domain.model.Customer
 import br.com.camunda.example.domain.model.Debit
+import br.com.camunda.example.domain.model.Transference
 
 fun Customer.toResponse(): CustomerResponse =
     CustomerResponse(
@@ -60,4 +62,21 @@ fun Debit.toResponse(): DebitResponse =
             scale = this.priceScale,
             currency = this.priceCurrency
         )
+    )
+
+fun Transference.toResponse(): TransferenceResponse =
+    TransferenceResponse(
+        id = this.id,
+        transactionId = this.transactionId,
+        description = this.description,
+        originAccountId = this.originAccount.id,
+        destinationAccountId = this.destinationAccount.id,
+        status = this.status.name,
+        price = TransferenceResponse.Price(
+            amount = this.priceAmount,
+            scale = this.priceScale,
+            currency = this.priceCurrency
+        ),
+        reason = this.reason,
+        reversedAt = this.reversedAt
     )

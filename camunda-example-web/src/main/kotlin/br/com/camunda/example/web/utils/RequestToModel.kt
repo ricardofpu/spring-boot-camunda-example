@@ -4,11 +4,13 @@ import br.com.camunda.example.api.v1.request.CreateAccountRequest
 import br.com.camunda.example.api.v1.request.CreateCreditRequest
 import br.com.camunda.example.api.v1.request.CreateCustomerRequest
 import br.com.camunda.example.api.v1.request.CreateDebitRequest
+import br.com.camunda.example.api.v1.request.CreateTransferenceRequest
 import br.com.camunda.example.api.v1.request.UpdateCustomerRequest
 import br.com.camunda.example.domain.model.Account
 import br.com.camunda.example.domain.model.Credit
 import br.com.camunda.example.domain.model.Customer
 import br.com.camunda.example.domain.model.Debit
+import br.com.camunda.example.domain.model.Transference
 
 fun CreateCustomerRequest.toModel(): Customer =
     Customer(
@@ -59,4 +61,15 @@ fun CreateDebitRequest.toModel(account: Account): Debit =
         priceScale = this.price?.scale!!,
         priceCurrency = this.price?.currency!!,
         account = account
+    )
+
+fun CreateTransferenceRequest.toModel(originAccount: Account, destinationAccount: Account): Transference =
+    Transference(
+        transactionId = this.transactionId,
+        description = this.description,
+        priceAmount = this.price?.amount!!,
+        priceScale = this.price?.scale!!,
+        priceCurrency = this.price?.currency!!,
+        originAccount = originAccount,
+        destinationAccount = destinationAccount
     )

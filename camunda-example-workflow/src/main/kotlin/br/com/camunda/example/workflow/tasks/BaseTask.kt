@@ -1,5 +1,6 @@
 package br.com.camunda.example.workflow.tasks
 
+import br.com.camunda.example.workflow.service.WorkflowManager
 import org.camunda.bpm.engine.delegate.DelegateExecution
 import org.camunda.bpm.engine.delegate.JavaDelegate
 import org.camunda.bpm.engine.impl.el.FixedValue
@@ -7,15 +8,9 @@ import org.camunda.bpm.engine.impl.el.FixedValue
 abstract class BaseTask : JavaDelegate {
 
     companion object {
-        const val TRANSFERENCE_ID = "transferenceId"
-        const val ORIGIN_CUSTOMER_ID = "originCustomerId"
-        const val DESTINATION_CUSTOMER_ID = "destinationCustomerId"
-        const val TRANSACTION_ID = "transactionId"
-
         lateinit var transferenceId: String
         lateinit var originCustomerId: String
         lateinit var destinationCustomerId: String
-        lateinit var transactionId: String
     }
 
     lateinit var status: FixedValue
@@ -29,9 +24,8 @@ abstract class BaseTask : JavaDelegate {
     }
 
     private fun loadDefaultVariables(execution: DelegateExecution) {
-        transferenceId = execution.getVariable(TRANSFERENCE_ID).toString()
-        originCustomerId = execution.getVariable(ORIGIN_CUSTOMER_ID).toString()
-        destinationCustomerId = execution.getVariable(DESTINATION_CUSTOMER_ID).toString()
-        transactionId = execution.getVariable(TRANSACTION_ID).toString()
+        transferenceId = execution.getVariable(WorkflowManager.TRANSFERENCE_ID).toString()
+        originCustomerId = execution.getVariable(WorkflowManager.ORIGIN_CUSTOMER_ID).toString()
+        destinationCustomerId = execution.getVariable(WorkflowManager.DESTINATION_CUSTOMER_ID).toString()
     }
 }

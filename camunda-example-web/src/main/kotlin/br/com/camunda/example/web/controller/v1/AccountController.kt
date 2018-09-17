@@ -11,6 +11,8 @@ import br.com.camunda.example.api.v1.response.DebitResponse
 import br.com.camunda.example.api.v1.response.TransferenceResponse
 import br.com.camunda.example.domain.service.AccountService
 import br.com.camunda.example.domain.service.CustomerService
+import br.com.camunda.example.domain.service.TransferenceService
+import br.com.camunda.example.domain.service.Workflow
 import br.com.camunda.example.web.utils.toModel
 import br.com.camunda.example.web.utils.toResponse
 import org.springframework.web.bind.annotation.PathVariable
@@ -24,7 +26,9 @@ import javax.validation.Valid
 @RestController
 class AccountController constructor(
     private val accountService: AccountService,
-    private val customerService: CustomerService
+    private val customerService: CustomerService,
+    private val transferenceService: TransferenceService,
+    private val workflow: Workflow
 ) : AccountApi {
 
     /**
@@ -82,6 +86,11 @@ class AccountController constructor(
         @PathVariable("id") id: String,
         @RequestBody @Valid request: CreateTransferenceRequest
     ): TransferenceResponse {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val originAccount = accountService.findById(id)
+        val destinationAccount = accountService.findById(request.destinationAccountId)
+        val transference = request.toModel(originAccount, destinationAccount)
+        val result = transferenceService.save(transference)
+        workflow.start(result)
+        return transference.toResponse()
     }
 }
