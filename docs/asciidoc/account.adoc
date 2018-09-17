@@ -1,0 +1,3 @@
+== Account
+
+include::{snippets}/customer-controller-test/should create account/auto-section.adoc[]
