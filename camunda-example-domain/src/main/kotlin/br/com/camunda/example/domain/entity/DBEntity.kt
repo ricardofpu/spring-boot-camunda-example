@@ -17,10 +17,10 @@ abstract class DBEntity {
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at")
-    val createdAt: Date? = null
+    var createdAt: Date? = null
 
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at")
-    val updatedAt: Date? = null
+    var updatedAt: Date? = null
 }

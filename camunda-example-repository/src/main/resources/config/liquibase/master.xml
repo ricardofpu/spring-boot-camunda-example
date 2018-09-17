@@ -4,10 +4,15 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <include file="classpath:config/liquibase/changelog/00000000000000_initial_schema.xml"
-             relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20180901003600_customer_table.xml"
              relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20180901003900_payment_transaction_table.xml"
+    <include file="classpath:config/liquibase/changelog/20180915003900_account_table.xml"
              relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20180915150900_debit_table.xml"
+             relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20180915151500_credit_table.xml"
+             relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20180915151600_transference_table.xml"
+             relativeToChangelogFile="false"/>
+
 </databaseChangeLog>

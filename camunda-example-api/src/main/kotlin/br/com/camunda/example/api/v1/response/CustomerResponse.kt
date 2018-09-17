@@ -1,10 +1,12 @@
 package br.com.camunda.example.api.v1.response
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import java.util.*
 
 /**
  * Customer Response
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 data class CustomerResponse(
 
     /**

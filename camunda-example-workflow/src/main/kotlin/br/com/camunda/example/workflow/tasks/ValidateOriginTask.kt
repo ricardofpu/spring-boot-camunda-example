@@ -6,21 +6,20 @@ import org.camunda.bpm.engine.delegate.DelegateExecution
 import org.springframework.stereotype.Component
 
 @Component
-class ValidateCustomerTask constructor(
+class ValidateOriginTask constructor(
     private val customerService: CustomerService
 ) : BaseTask() {
 
     companion object {
-        const val IS_CUSTOMER_ACTIVE = "isCustomerActive"
+        const val IS_ORIGIN_ACTIVE = "isOriginActive"
     }
 
     override fun executeTask(execution: DelegateExecution) {
-
         try {
-            customerService.validateStatus(customerId)
-            execution.setVariable(IS_CUSTOMER_ACTIVE, true)
+            customerService.validateStatus(originCustomerId)
+            execution.setVariable(IS_ORIGIN_ACTIVE, true)
         } catch (e: InvalidCustomerStatusException) {
-            execution.setVariable(IS_CUSTOMER_ACTIVE, false)
+            execution.setVariable(IS_ORIGIN_ACTIVE, false)
         }
     }
 }

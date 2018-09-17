@@ -2,5 +2,6 @@ package br.com.camunda.example.domain.enums
 
 enum class PaymentType {
     DEBIT,
-    CREDIT
+    CREDIT,
+    TRANSFERENCE_CREDIT
 }

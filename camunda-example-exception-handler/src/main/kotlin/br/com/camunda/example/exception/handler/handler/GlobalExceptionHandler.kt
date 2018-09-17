@@ -13,12 +13,13 @@ import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.ResponseStatus
 import java.nio.file.AccessDeniedException
 
-
 @ControllerAdvice
 @ResponseBody
 open class GlobalExceptionHandler {
 
     private val LOG = LogManager.getLogger(this.javaClass)
+
+    constructor() {}
 
     @ExceptionHandler(HttpMessageNotReadableException::class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -32,7 +33,7 @@ open class GlobalExceptionHandler {
         return ExceptionResponse("Access denied error")
     }
 
-    @ExceptionHandler(ClassNotFoundException::class)
+    @ExceptionHandler(NotFoundException::class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     protected fun handleNotFound(ex: NotFoundException): ResourceValueResponse? {
         return if (ex.resourceValue != null) ResourceValueResponse(ex.resourceValue!!) else null

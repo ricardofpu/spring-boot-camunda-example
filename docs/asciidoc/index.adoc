@@ -13,3 +13,4 @@ include::introduction.adoc[]
 The V1 API resources is detailed in this section.
 
 include::customer.adoc[]
+include::account.adoc[]

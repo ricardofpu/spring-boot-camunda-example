@@ -4,42 +4,49 @@
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>SequenceFlow_1n3rq7w</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_1n3rq7w" sourceRef="StartEvent_1" targetRef="VALIDATE_SOURCE_CUSTOMER" />
-    <bpmn:serviceTask id="VALIDATE_SOURCE_CUSTOMER" name="Validate Customer Status" camunda:asyncBefore="true" camunda:delegateExpression="${validateCustomerTask}">
+    <bpmn:sequenceFlow id="SequenceFlow_1n3rq7w" sourceRef="StartEvent_1" targetRef="VALIDATE_ORIGIN_CUSTOMER" />
+    <bpmn:serviceTask id="VALIDATE_ORIGIN_CUSTOMER" name="Validate Origin Status" camunda:asyncBefore="true" camunda:delegateExpression="${validateOriginTask}">
       <bpmn:incoming>SequenceFlow_1n3rq7w</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0wm7fev</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:serviceTask id="VALIDATE_DESTINATION" name="Validate Destination" camunda:asyncBefore="true" camunda:delegateExpression="${validateDestinationTask}">
-      <bpmn:incoming>SequenceFlow_0g3a9ar</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0ocmaxq</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:exclusiveGateway id="CUSTOMER_IS_ACTIVE" name="Customer is active?" camunda:asyncBefore="true">
+    <bpmn:exclusiveGateway id="ORIGIN_IS_ACTIVE_GATEWAY" name="Origin is active?" camunda:asyncBefore="true">
       <bpmn:incoming>SequenceFlow_0wm7fev</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1itag1o</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_0g3a9ar</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="SequenceFlow_0wm7fev" sourceRef="VALIDATE_SOURCE_CUSTOMER" targetRef="CUSTOMER_IS_ACTIVE" />
+    <bpmn:sequenceFlow id="SequenceFlow_0wm7fev" sourceRef="VALIDATE_ORIGIN_CUSTOMER" targetRef="ORIGIN_IS_ACTIVE_GATEWAY" />
     <bpmn:endEvent id="EndEvent_1qpq8dx">
-      <bpmn:incoming>SequenceFlow_1itag1o</bpmn:incoming>
-      <bpmn:incoming>SequenceFlow_15anu1i</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1cc9p2n</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_09lq61n</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_1itag1o" name="FAIL" sourceRef="CUSTOMER_IS_ACTIVE" targetRef="EndEvent_1qpq8dx">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${execution.getVariable("isCustomerActive") == false}</bpmn:conditionExpression>
+    <bpmn:sequenceFlow id="SequenceFlow_1itag1o" name="FAIL" sourceRef="ORIGIN_IS_ACTIVE_GATEWAY" targetRef="ORIGIN_STATUS_INVALID">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${execution.getVariable("isOriginActive") == false}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_0ocmaxq" sourceRef="VALIDATE_DESTINATION" targetRef="Validate_Customer_Balance" />
-    <bpmn:sequenceFlow id="SequenceFlow_173zb58" sourceRef="Validate_Customer_Balance" targetRef="Create_Transference" />
-    <bpmn:sequenceFlow id="SequenceFlow_15anu1i" sourceRef="Create_Transference" targetRef="EndEvent_1qpq8dx" />
-    <bpmn:sequenceFlow id="SequenceFlow_0g3a9ar" name="SUCCESS" sourceRef="CUSTOMER_IS_ACTIVE" targetRef="VALIDATE_DESTINATION">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${execution.getVariable("isCustomerActive") == true}</bpmn:conditionExpression>
+    <bpmn:sequenceFlow id="SequenceFlow_0g3a9ar" name="SUCCESS" sourceRef="ORIGIN_IS_ACTIVE_GATEWAY" targetRef="SUB_PROCESS_CREATE_TRANSFERENCE">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${execution.getVariable("isOriginActive") == true}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:serviceTask id="Validate_Customer_Balance" name="Validate Customer Balance" camunda:asyncBefore="true" camunda:delegateExpression="${validateCustomerBalanceTask}">
-      <bpmn:incoming>SequenceFlow_0ocmaxq</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_173zb58</bpmn:outgoing>
+    <bpmn:callActivity id="SUB_PROCESS_CREATE_TRANSFERENCE" name="Create Transference" calledElement="EXECUTE_TRANSFERENCE_FLOW">
+      <bpmn:extensionElements>
+        <camunda:in variables="all" />
+        <camunda:in businessKey="#{execution.processBusinessKey}" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0g3a9ar</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1cc9p2n</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:sequenceFlow id="SequenceFlow_1cc9p2n" sourceRef="SUB_PROCESS_CREATE_TRANSFERENCE" targetRef="EndEvent_1qpq8dx" />
+    <bpmn:serviceTask id="ORIGIN_STATUS_INVALID" name="Origin Status Invalid" camunda:asyncBefore="true" camunda:delegateExpression="${finishTransferenceTask}">
+      <bpmn:extensionElements>
+        <camunda:field name="status">
+          <camunda:string>REFUSED</camunda:string>
+        </camunda:field>
+        <camunda:field name="reason">
+          <camunda:string>Customer origin is not active</camunda:string>
+        </camunda:field>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1itag1o</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_09lq61n</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:serviceTask id="Create_Transference" name="Create Transference" camunda:asyncBefore="true" camunda:delegateExpression="${createTransferenceTask}">
-      <bpmn:incoming>SequenceFlow_173zb58</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_15anu1i</bpmn:outgoing>
-    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_09lq61n" sourceRef="ORIGIN_STATUS_INVALID" targetRef="EndEvent_1qpq8dx" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="TRANSFERENCE_WORKFLOW">
@@ -48,61 +55,54 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1n3rq7w_di" bpmnElement="SequenceFlow_1n3rq7w">
         <di:waypoint x="209" y="120" />
-        <di:waypoint x="302" y="120" />
+        <di:waypoint x="304" y="120" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="ServiceTask_0rtto1b_di" bpmnElement="VALIDATE_SOURCE_CUSTOMER">
-        <dc:Bounds x="302" y="80" width="100" height="80" />
+      <bpmndi:BPMNShape id="ServiceTask_0rtto1b_di" bpmnElement="VALIDATE_ORIGIN_CUSTOMER">
+        <dc:Bounds x="304" y="80" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ServiceTask_1xse07e_di" bpmnElement="VALIDATE_DESTINATION">
-        <dc:Bounds x="648" y="80" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ExclusiveGateway_00teb31_di" bpmnElement="CUSTOMER_IS_ACTIVE" isMarkerVisible="true">
-        <dc:Bounds x="500" y="95" width="50" height="50" />
+      <bpmndi:BPMNShape id="ExclusiveGateway_00teb31_di" bpmnElement="ORIGIN_IS_ACTIVE_GATEWAY" isMarkerVisible="true">
+        <dc:Bounds x="504" y="95" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="495" y="62" width="60" height="27" />
+          <dc:Bounds x="489" y="75" width="79" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0wm7fev_di" bpmnElement="SequenceFlow_0wm7fev">
-        <di:waypoint x="402" y="120" />
-        <di:waypoint x="500" y="120" />
+        <di:waypoint x="404" y="120" />
+        <di:waypoint x="504" y="120" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="EndEvent_1qpq8dx_di" bpmnElement="EndEvent_1qpq8dx">
-        <dc:Bounds x="1239" y="102" width="36" height="36" />
+        <dc:Bounds x="848" y="102" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1itag1o_di" bpmnElement="SequenceFlow_1itag1o">
-        <di:waypoint x="525" y="145" />
-        <di:waypoint x="525" y="283" />
-        <di:waypoint x="1257" y="283" />
-        <di:waypoint x="1257" y="138" />
+        <di:waypoint x="529" y="145" />
+        <di:waypoint x="529" y="239" />
+        <di:waypoint x="654" y="239" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="533" y="170" width="23" height="14" />
+          <dc:Bounds x="537" y="160" width="23" height="14" />
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_0ocmaxq_di" bpmnElement="SequenceFlow_0ocmaxq">
-        <di:waypoint x="748" y="120" />
-        <di:waypoint x="846" y="120" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_173zb58_di" bpmnElement="SequenceFlow_173zb58">
-        <di:waypoint x="946" y="120" />
-        <di:waypoint x="1044" y="120" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_15anu1i_di" bpmnElement="SequenceFlow_15anu1i">
-        <di:waypoint x="1144" y="120" />
-        <di:waypoint x="1239" y="120" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0g3a9ar_di" bpmnElement="SequenceFlow_0g3a9ar">
-        <di:waypoint x="550" y="120" />
-        <di:waypoint x="648" y="120" />
+        <di:waypoint x="554" y="120" />
+        <di:waypoint x="654" y="120" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="573" y="102" width="53" height="14" />
+          <dc:Bounds x="570" y="100" width="53" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="ServiceTask_0bzzqew_di" bpmnElement="Validate_Customer_Balance">
-        <dc:Bounds x="846" y="80" width="100" height="80" />
+      <bpmndi:BPMNShape id="CallActivity_1977ss7_di" bpmnElement="SUB_PROCESS_CREATE_TRANSFERENCE">
+        <dc:Bounds x="654" y="80" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ServiceTask_0nqkfxb_di" bpmnElement="Create_Transference">
-        <dc:Bounds x="1044" y="80" width="100" height="80" />
+      <bpmndi:BPMNEdge id="SequenceFlow_1cc9p2n_di" bpmnElement="SequenceFlow_1cc9p2n">
+        <di:waypoint x="754" y="120" />
+        <di:waypoint x="848" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0t2cr9k_di" bpmnElement="ORIGIN_STATUS_INVALID">
+        <dc:Bounds x="654" y="199" width="100" height="80" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_09lq61n_di" bpmnElement="SequenceFlow_09lq61n">
+        <di:waypoint x="754" y="239" />
+        <di:waypoint x="866" y="239" />
+        <di:waypoint x="866" y="138" />
+      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

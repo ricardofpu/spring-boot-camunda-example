@@ -1,8 +1,13 @@
 package br.com.camunda.example.web
 
+import br.com.camunda.example.api.v1.request.CreateAccountRequest
+import br.com.camunda.example.api.v1.request.CreateCreditRequest
 import br.com.camunda.example.api.v1.request.CreateCustomerRequest
-import br.com.camunda.example.api.v1.request.CreatePaymentRequest
+import br.com.camunda.example.api.v1.request.CreateDebitRequest
+import br.com.camunda.example.api.v1.request.UpdateCustomerRequest
+import br.com.camunda.example.api.v1.response.AccountResponse
 import br.com.camunda.example.api.v1.response.CustomerResponse
+import br.com.camunda.example.domain.randomUUID
 import br.com.camunda.example.infrastructure.jsonToObject
 import br.com.camunda.example.infrastructure.objectToJson
 import br.com.camunda.example.web.config.ApplicationConfigTest
@@ -39,7 +44,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
-import java.time.Instant
+import java.text.SimpleDateFormat
 import java.util.*
 import javax.annotation.PostConstruct
 
@@ -151,6 +156,28 @@ abstract class ControllerBaseTest {
         return response.response.contentAsString.jsonToObject(CustomerResponse::class.java)
     }
 
+    protected fun requestToCreateAccount(
+        customerRequest: CreateCustomerRequest = buildCreateCustomerRequest()
+    ): AccountResponse {
+
+        val customer = requestToCreateCustomer(customerRequest)
+
+        val request = buildCreateAccountRequest(customerId = customer.id!!)
+
+        val response = this.mockMvc.perform(
+            post(
+                "/v1/accounts"
+            )
+                .content(request.objectToJson())
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+        )
+            .andExpect(status().isCreated)
+            .andExpect(jsonPath("$.id", CoreMatchers.notNullValue()))
+            .andReturn()
+
+        return response.response.contentAsString.jsonToObject(AccountResponse::class.java)
+    }
+
     protected fun buildCreateCustomerRequest() =
         CreateCustomerRequest(
             fullName = "Ricardo Borges",
@@ -158,18 +185,61 @@ abstract class ControllerBaseTest {
             gender = "MALE",
             phoneNumber = "3499999999",
             email = "ricardo@test.com",
-            birthDate = Date.from(Instant.now())
+            birthDate = SimpleDateFormat("yyyy-MM-dd").parse("1992-06-29")
         )
 
-    protected fun buildCreatePaymentRequest() =
-        CreatePaymentRequest(
-            payment = CreatePaymentRequest.Payment(
-                amount = 1000,
+    protected fun buildUpdateCustomerRequest(
+        fullName: String = "Ricardo Borges",
+        nickName: String = "Ricardo",
+        gender: String = "MALE",
+        phoneNumber: String = "3499999999",
+        email: String = "ricardo@test.com",
+        birthDate: Date = SimpleDateFormat("yyyy-MM-dd").parse("1992-06-29")
+    ): UpdateCustomerRequest =
+        UpdateCustomerRequest(
+            fullName = fullName,
+            nickName = nickName,
+            gender = gender,
+            phoneNumber = phoneNumber,
+            email = email,
+            birthDate = birthDate
+        )
+
+    protected fun buildCreateAccountRequest(
+        customerId: String = randomUUID(),
+        initialBalance: CreateAccountRequest.Balance = CreateAccountRequest.Balance(
+            amount = 1000,
+            scale = 2,
+            currency = "BRL"
+        )
+    ): CreateAccountRequest =
+        CreateAccountRequest(
+            customerId = customerId,
+            initialBalance = initialBalance
+        )
+
+    protected fun buildCreateCreditRequest(): CreateCreditRequest =
+        CreateCreditRequest(
+            transactionId = randomUUID(),
+            description = "CREDIT",
+            origin = "ORIGIN_APP",
+            value = CreateCreditRequest.Value(
+                amount = 2000,
                 scale = 2,
                 currency = "BRL"
-            ),
-            type = "CREDIT",
-            transactionType = "PAYMENT"
+            )
+        )
+
+    protected fun buildCreateDebitRequest(): CreateDebitRequest =
+        CreateDebitRequest(
+            transactionId = randomUUID(),
+            description = "CREDIT",
+            origin = "ORIGIN_APP",
+            price = CreateDebitRequest.Price(
+                amount = 500,
+                scale = 2,
+                currency = "BRL"
+            )
         )
 
 }

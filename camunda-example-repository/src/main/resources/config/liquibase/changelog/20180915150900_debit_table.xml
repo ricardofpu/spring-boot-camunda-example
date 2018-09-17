@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+
+    <changeSet id="20180915150900-1" author="ricardo.borges">
+        <createTable tableName="debit">
+            <column name="id" type="java.sql.Types.VARCHAR">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="account_id" type="java.sql.Types.VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="transaction_id" type="java.sql.Types.VARCHAR">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="origin" type="java.sql.Types.VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="description" type="java.sql.Types.VARCHAR">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="price_amount" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="price_scale" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="price_currency" type="java.sql.Types.VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="type" type="java.sql.Types.VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_at" type="java.sql.Types.TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20180915150900-2" author="ricardo.borges">
+        <addForeignKeyConstraint baseColumnNames="account_id" baseTableName="debit"
+                                 constraintName="fk_account_id" deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+                                 referencedTableName="account"/>
+    </changeSet>
+
+</databaseChangeLog>

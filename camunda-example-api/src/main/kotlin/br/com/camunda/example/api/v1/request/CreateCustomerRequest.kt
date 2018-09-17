@@ -1,5 +1,6 @@
 package br.com.camunda.example.api.v1.request
 
+import org.springframework.format.annotation.DateTimeFormat
 import java.util.*
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Pattern
@@ -37,6 +38,6 @@ data class CreateCustomerRequest(
     /**
      * Customer birth date
      */
-    @field:NotNull val birthDate: Date?
+    @field:[NotNull DateTimeFormat(pattern = "yyyy-MM-dd")] val birthDate: Date?
 
 )
