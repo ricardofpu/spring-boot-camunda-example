@@ -1,3 +1,9 @@
 == Account
 
-include::{snippets}/customer-controller-test/should create account/auto-section.adoc[]
+include::{snippets}/account-controller-test/should create account/auto-section.adoc[]
+
+include::{snippets}/account-controller-test/should find account/auto-section.adoc[]
+
+include::{snippets}/account-controller-test/should perform credit in account/auto-section.adoc[]
+
+include::{snippets}/account-controller-test/should perform debit in account/auto-section.adoc[]

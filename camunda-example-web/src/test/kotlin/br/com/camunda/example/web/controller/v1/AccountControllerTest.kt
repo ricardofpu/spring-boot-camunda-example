@@ -92,6 +92,23 @@ class AccountControllerTest : ControllerBaseTest() {
                 assertEquals(request.description, response.description)
                 assertEquals(PaymentType.CREDIT.name, response.type)
             }
+    }
+
+    @Test
+    fun `should perform credit in account and then validate balance`() {
+        val account = requestToCreateAccount()
+
+        val request = buildCreateCreditRequest()
+
+        //Perform credit
+        this.mockMvc.perform(
+            post(
+                "/v1/accounts/{id}/credits", account.id
+            )
+                .content(request.objectToJson())
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isCreated)
 
         //Validate new balance
         this.mockMvc.perform(
@@ -139,6 +156,23 @@ class AccountControllerTest : ControllerBaseTest() {
                 assertEquals(request.description, response.description)
                 assertEquals(PaymentType.DEBIT.name, response.type)
             }
+    }
+
+    @Test
+    fun `should perform debit in account and then validate balance`() {
+        val account = requestToCreateAccount()
+
+        val request = buildCreateDebitRequest()
+
+        //Perform debit
+        this.mockMvc.perform(
+            post(
+                "/v1/accounts/{id}/debits", account.id
+            )
+                .content(request.objectToJson())
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isCreated)
 
         //Validate new balance
         this.mockMvc.perform(
