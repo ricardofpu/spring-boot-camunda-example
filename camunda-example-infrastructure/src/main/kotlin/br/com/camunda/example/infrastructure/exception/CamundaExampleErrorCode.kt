@@ -18,4 +18,7 @@ object CamundaExampleErrorCode {
     val INSUFFICIENT_BALANCE_EXCEPTION: ErrorCode =
         Error("INSUFFICIENT_BALANCE_EXCEPTION", "insufficient.balance.exception")
 
+    val UPDATE_TRANSFERENCE_NOT_EXECUTED: ErrorCode =
+            Error("UPDATE_TRANSFERENCE_NOT_EXECUTED", "update.transference.not.executed")
+
 }

@@ -3,11 +3,13 @@ package br.com.camunda.example.web.service
 import br.com.camunda.example.domain.model.Account
 import br.com.camunda.example.domain.model.Credit
 import br.com.camunda.example.domain.model.Debit
+import br.com.camunda.example.domain.model.Transference
 import br.com.camunda.example.domain.service.AccountService
 import br.com.camunda.example.domain.service.CustomerService
 import br.com.camunda.example.exception.handler.BusinessException
 import br.com.camunda.example.exception.handler.NotFoundException
 import br.com.camunda.example.exception.handler.error.ResourceValue
+import br.com.camunda.example.infrastructure.exception.BalanceNotReservedException
 import br.com.camunda.example.infrastructure.exception.CamundaExampleErrorCode
 import br.com.camunda.example.repository.AccountRepository
 import br.com.camunda.example.repository.CreditRepository
@@ -19,7 +21,6 @@ import java.util.*
 
 @Service
 open class AccountServiceImpl constructor(
-    private val customerRepository: AccountRepository,
     private val accountRepository: AccountRepository,
     private val creditRepository: CreditRepository,
     private val debitRepository: DebitRepository,
@@ -66,7 +67,9 @@ open class AccountServiceImpl constructor(
 
         val result = creditRepository.save(credit)
 
-        this.updateBalanceByAccountId(credit)
+        val creditPrice = credit.getAmountAsBigDecimal()
+
+        this.increaseBalanceByAccountId(credit.account.id, creditPrice)
 
         log.debug("Credit saved in database with id {}", result.id)
 
@@ -82,18 +85,41 @@ open class AccountServiceImpl constructor(
 
         val result = debitRepository.save(debit)
 
-        this.removeBalanceByAccountId(debit)
+        val debitPrice = debit.getAmountAsBigDecimal()
+
+        this.removeBalanceByAccountId(debit.account.id, debitPrice)
 
         log.debug("Credit saved in database with id {}", result.id)
 
         return result
     }
 
-    private fun removeBalanceByAccountId(debit: Debit) {
-        val debitPrice = debit.getPrice()
-        val account = getAccount(debit.account.id)
-        val balance = account.getBalance()
-        val newBalance = (balance.minus(debitPrice))
+    override fun reserveBalance(transference: Transference) {
+        log.debug("Balance will be reserved in database to account id {}", transference.originAccount.id)
+
+        val debitPrice = transference.getAmountAsBigDecimal()
+
+        this.reserveBalanceByAccountId(transference.originAccount.id, debitPrice)
+
+        log.debug("Balance reserved in database to account id {}", transference.originAccount.id)
+    }
+
+    private fun reserveBalanceByAccountId(accountId: String, debitPrice: BigDecimal) {
+        val account = getAccount(accountId)
+        val balance = account.getBalanceAmountAsBigDecimal()
+        val newBalance = balance.minus(debitPrice)
+
+        if (newBalance < BigDecimal.ZERO) {
+            throw BalanceNotReservedException()
+        }
+
+        accountRepository.updateBalanceAmountByAccountId(account.id, convertBalanceToScaleTwo(newBalance).toLong())
+    }
+
+    private fun removeBalanceByAccountId(accountId: String, debitPrice: BigDecimal) {
+        val account = getAccount(accountId)
+        val balance = account.getBalanceAmountAsBigDecimal()
+        val newBalance = balance.minus(debitPrice)
 
         if (newBalance < BigDecimal.ZERO) {
             throw BusinessException(CamundaExampleErrorCode.INSUFFICIENT_BALANCE_EXCEPTION)
@@ -102,29 +128,19 @@ open class AccountServiceImpl constructor(
         accountRepository.updateBalanceAmountByAccountId(account.id, convertBalanceToScaleTwo(newBalance).toLong())
     }
 
+    private fun increaseBalanceByAccountId(accountId: String, creditPrice: BigDecimal) {
+        val account = getAccount(accountId)
+        val balance = account.getBalanceAmountAsBigDecimal()
+        val newBalance = balance.plus(creditPrice)
 
-    private fun updateBalanceByAccountId(credit: Credit) {
-        val creditPrice = credit.getValue()
-        val account = getAccount(credit.account.id)
-        val balance = account.getBalance()
-        val newBalance: BigDecimal = convertBalanceToScaleTwo(balance.add(creditPrice))
-
-        accountRepository.updateBalanceAmountByAccountId(account.id, newBalance.toLong())
+        accountRepository.updateBalanceAmountByAccountId(account.id, convertBalanceToScaleTwo(newBalance).toLong())
     }
 
-    private fun convertBalanceToScaleTwo(newBalance: BigDecimal): BigDecimal {
-        return newBalance.multiply(BigDecimal.valueOf(100))
-    }
+    private fun convertBalanceToScaleTwo(newBalance: BigDecimal): BigDecimal =
+        newBalance.multiply(BigDecimal.valueOf(100))
 
     private fun getAccount(id: String): Account {
         return Optional.ofNullable(accountRepository.findOne(id))
-            .orElseThrow {
-                NotFoundException(ResourceValue(Account::class.java, id))
-            }
-    }
-
-    private fun getCustomer(id: String): Account {
-        return Optional.ofNullable(customerRepository.findOne(id))
             .orElseThrow {
                 NotFoundException(ResourceValue(Account::class.java, id))
             }

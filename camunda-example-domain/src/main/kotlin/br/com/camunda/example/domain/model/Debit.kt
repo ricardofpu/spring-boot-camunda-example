@@ -48,5 +48,5 @@ data class Debit(
 
 ) : DBEntityOnlyCreate() {
 
-    fun getPrice(): BigDecimal = BigDecimal.valueOf(priceAmount, priceScale)
+    fun getAmountAsBigDecimal(): BigDecimal = BigDecimal.valueOf(priceAmount, priceScale)
 }

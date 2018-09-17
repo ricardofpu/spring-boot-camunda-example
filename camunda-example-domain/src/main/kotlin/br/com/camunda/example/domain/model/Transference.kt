@@ -4,6 +4,7 @@ import br.com.camunda.example.domain.entity.DBEntity
 import br.com.camunda.example.domain.enums.PaymentStatus
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.GenericGenerator
+import java.math.BigDecimal
 import java.util.*
 import javax.persistence.AttributeConverter
 import javax.persistence.Convert
@@ -69,4 +70,6 @@ data class Transference(
             }
         }
     }
+
+    fun getAmountAsBigDecimal(): BigDecimal = BigDecimal.valueOf(priceAmount, priceScale)
 }

@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_16hl2qp" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.16.2">
+  <bpmn:process id="EXECUTE_TRANSFERENCE_FLOW" name="Execute Transference" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_1j6ft0k</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="EndEvent_0r175jv">
+      <bpmn:incoming>SequenceFlow_0fdeyl2</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1wv0nfu</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_02zosuy</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="VALIDATE_DESTINATION_STATUS" name="Validate Destination Status" camunda:asyncBefore="true" camunda:delegateExpression="${validateDestinationTask}">
+      <bpmn:incoming>SequenceFlow_1j6ft0k</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1es5w6o</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="RESERVE_ORIGIN_BALANCE" name="Reserve Origin balance" camunda:asyncBefore="true" camunda:delegateExpression="${reserveOriginBalanceTask}">
+      <bpmn:incoming>SequenceFlow_1lw2vh9</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0fo8p3d</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="FINISH_TRANSFERENCE" name="Finish Transference" camunda:asyncBefore="true" camunda:delegateExpression="${finishTransferenceTask}">
+      <bpmn:extensionElements>
+        <camunda:field name="status">
+          <camunda:string>CONFIRMED</camunda:string>
+        </camunda:field>
+        <camunda:field name="reason">
+          <camunda:string>Transference completed</camunda:string>
+        </camunda:field>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_11i3pgt</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_02zosuy</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1j6ft0k" sourceRef="StartEvent_1" targetRef="VALIDATE_DESTINATION_STATUS" />
+    <bpmn:serviceTask id="DESTINATION_STATUS_INVALID" name="Destination Status Invalid" camunda:asyncBefore="true" camunda:delegateExpression="${finishTransferenceTask}">
+      <bpmn:extensionElements>
+        <camunda:field name="status">
+          <camunda:string>REFUSED</camunda:string>
+        </camunda:field>
+        <camunda:field name="reason">
+          <camunda:string>Customer destination is not active</camunda:string>
+        </camunda:field>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0ej6pso</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1wv0nfu</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="DESTINATION_IS_ACTIVE_GATEWAY" name="Destination is active?">
+      <bpmn:incoming>SequenceFlow_1es5w6o</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0ej6pso</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_1lw2vh9</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="ORIGIN_BALANCE_INVALID_GATEWAY" name="Origin balance is valid?" camunda:asyncBefore="true">
+      <bpmn:incoming>SequenceFlow_0fo8p3d</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1s84qis</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0goxx46</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_1es5w6o" sourceRef="VALIDATE_DESTINATION_STATUS" targetRef="DESTINATION_IS_ACTIVE_GATEWAY" />
+    <bpmn:sequenceFlow id="SequenceFlow_0ej6pso" name="FAIL" sourceRef="DESTINATION_IS_ACTIVE_GATEWAY" targetRef="DESTINATION_STATUS_INVALID">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${execution.getVariable("isDestinationActive") == false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_1lw2vh9" name="SUCCESS" sourceRef="DESTINATION_IS_ACTIVE_GATEWAY" targetRef="RESERVE_ORIGIN_BALANCE">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${execution.getVariable("isDestinationActive") == true}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_0fo8p3d" sourceRef="RESERVE_ORIGIN_BALANCE" targetRef="ORIGIN_BALANCE_INVALID_GATEWAY" />
+    <bpmn:serviceTask id="ORIGIN_BALANCE_INVALID" name="Origin Balance Invalid" camunda:asyncBefore="true" camunda:delegateExpression="${finishTransferenceTask}">
+      <bpmn:extensionElements>
+        <camunda:field name="status">
+          <camunda:string>REFUSED</camunda:string>
+        </camunda:field>
+        <camunda:field name="reason">
+          <camunda:string>Insufficient balance of origin</camunda:string>
+        </camunda:field>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1s84qis</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0fdeyl2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0fdeyl2" sourceRef="ORIGIN_BALANCE_INVALID" targetRef="EndEvent_0r175jv" />
+    <bpmn:sequenceFlow id="SequenceFlow_1wv0nfu" sourceRef="DESTINATION_STATUS_INVALID" targetRef="EndEvent_0r175jv" />
+    <bpmn:sequenceFlow id="SequenceFlow_1s84qis" name="FAIL" sourceRef="ORIGIN_BALANCE_INVALID_GATEWAY" targetRef="ORIGIN_BALANCE_INVALID">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${execution.getVariable("isBalanceReserved") == false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_0goxx46" name="SUCCESS" sourceRef="ORIGIN_BALANCE_INVALID_GATEWAY" targetRef="PERFORM_CREDIT_TO_DESTINATION">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${execution.getVariable("isBalanceReserved") == true}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_02zosuy" sourceRef="FINISH_TRANSFERENCE" targetRef="EndEvent_0r175jv" />
+    <bpmn:serviceTask id="PERFORM_CREDIT_TO_DESTINATION" name="Perform Credit to Destination" camunda:asyncBefore="true" camunda:delegateExpression="${performCreditToDestinationTask}">
+      <bpmn:incoming>SequenceFlow_0goxx46</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_11i3pgt</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_11i3pgt" sourceRef="PERFORM_CREDIT_TO_DESTINATION" targetRef="FINISH_TRANSFERENCE" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="EXECUTE_TRANSFERENCE_FLOW">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="108" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0r175jv_di" bpmnElement="EndEvent_0r175jv">
+        <dc:Bounds x="1272" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0ch00hk_di" bpmnElement="VALIDATE_DESTINATION_STATUS">
+        <dc:Bounds x="230" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1qzp1jf_di" bpmnElement="RESERVE_ORIGIN_BALANCE">
+        <dc:Bounds x="562" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1rou70m_di" bpmnElement="FINISH_TRANSFERENCE">
+        <dc:Bounds x="1085" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1j6ft0k_di" bpmnElement="SequenceFlow_1j6ft0k">
+        <di:waypoint x="144" y="120" />
+        <di:waypoint x="230" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1e54ql3_di" bpmnElement="DESTINATION_STATUS_INVALID">
+        <dc:Bounds x="396" y="252" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_1m3lgwt_di" bpmnElement="DESTINATION_IS_ACTIVE_GATEWAY" isMarkerVisible="true">
+        <dc:Bounds x="421" y="95" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="412" y="63" width="67" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_0uhdxcj_di" bpmnElement="ORIGIN_BALANCE_INVALID_GATEWAY" isMarkerVisible="true">
+        <dc:Bounds x="753" y="95" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="736" y="65" width="83" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1es5w6o_di" bpmnElement="SequenceFlow_1es5w6o">
+        <di:waypoint x="330" y="120" />
+        <di:waypoint x="421" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0ej6pso_di" bpmnElement="SequenceFlow_0ej6pso">
+        <di:waypoint x="446" y="145" />
+        <di:waypoint x="446" y="252" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="452" y="157" width="23" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1lw2vh9_di" bpmnElement="SequenceFlow_1lw2vh9">
+        <di:waypoint x="471" y="120" />
+        <di:waypoint x="562" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="486" y="102" width="53" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0fo8p3d_di" bpmnElement="SequenceFlow_0fo8p3d">
+        <di:waypoint x="662" y="120" />
+        <di:waypoint x="753" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_185tv4t_di" bpmnElement="ORIGIN_BALANCE_INVALID">
+        <dc:Bounds x="728" y="252" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0fdeyl2_di" bpmnElement="SequenceFlow_0fdeyl2">
+        <di:waypoint x="778" y="332" />
+        <di:waypoint x="778" y="366" />
+        <di:waypoint x="1290" y="366" />
+        <di:waypoint x="1290" y="138" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1wv0nfu_di" bpmnElement="SequenceFlow_1wv0nfu">
+        <di:waypoint x="446" y="332" />
+        <di:waypoint x="446" y="366" />
+        <di:waypoint x="1290" y="366" />
+        <di:waypoint x="1290" y="138" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1s84qis_di" bpmnElement="SequenceFlow_1s84qis">
+        <di:waypoint x="778" y="145" />
+        <di:waypoint x="778" y="252" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="783" y="159" width="23" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0goxx46_di" bpmnElement="SequenceFlow_0goxx46">
+        <di:waypoint x="803" y="120" />
+        <di:waypoint x="894" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="822" y="102" width="53" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_02zosuy_di" bpmnElement="SequenceFlow_02zosuy">
+        <di:waypoint x="1185" y="120" />
+        <di:waypoint x="1272" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0ll4mg2_di" bpmnElement="PERFORM_CREDIT_TO_DESTINATION">
+        <dc:Bounds x="894" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_11i3pgt_di" bpmnElement="SequenceFlow_11i3pgt">
+        <di:waypoint x="994" y="120" />
+        <di:waypoint x="1085" y="120" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -54,5 +54,5 @@ data class Account(
 
 ) : DBEntity() {
 
-    fun getBalance(): BigDecimal = BigDecimal.valueOf(balanceAmount, balanceScale)
+    fun getBalanceAmountAsBigDecimal(): BigDecimal = BigDecimal.valueOf(balanceAmount, balanceScale)
 }

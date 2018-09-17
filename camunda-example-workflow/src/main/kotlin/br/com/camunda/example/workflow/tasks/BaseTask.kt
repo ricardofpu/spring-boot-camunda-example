@@ -2,18 +2,24 @@ package br.com.camunda.example.workflow.tasks
 
 import org.camunda.bpm.engine.delegate.DelegateExecution
 import org.camunda.bpm.engine.delegate.JavaDelegate
+import org.camunda.bpm.engine.impl.el.FixedValue
 
 abstract class BaseTask : JavaDelegate {
 
     companion object {
-        const val CUSTOMER_ID = "customerId"
+        const val TRANSFERENCE_ID = "transferenceId"
+        const val ORIGIN_CUSTOMER_ID = "originCustomerId"
         const val DESTINATION_CUSTOMER_ID = "destinationCustomerId"
         const val TRANSACTION_ID = "transactionId"
 
-        lateinit var customerId: String
+        lateinit var transferenceId: String
+        lateinit var originCustomerId: String
         lateinit var destinationCustomerId: String
         lateinit var transactionId: String
     }
+
+    lateinit var status: FixedValue
+    lateinit var reason: FixedValue
 
     abstract fun executeTask(execution: DelegateExecution)
 
@@ -23,7 +29,8 @@ abstract class BaseTask : JavaDelegate {
     }
 
     private fun loadDefaultVariables(execution: DelegateExecution) {
-        customerId = execution.getVariable(CUSTOMER_ID).toString()
+        transferenceId = execution.getVariable(TRANSFERENCE_ID).toString()
+        originCustomerId = execution.getVariable(ORIGIN_CUSTOMER_ID).toString()
         destinationCustomerId = execution.getVariable(DESTINATION_CUSTOMER_ID).toString()
         transactionId = execution.getVariable(TRANSACTION_ID).toString()
     }

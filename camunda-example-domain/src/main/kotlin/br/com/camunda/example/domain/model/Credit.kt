@@ -48,5 +48,5 @@ data class Credit(
 
 ) : DBEntityOnlyCreate() {
 
-    fun getValue(): BigDecimal = BigDecimal.valueOf(valueAmount, valueScale)
+    fun getAmountAsBigDecimal(): BigDecimal = BigDecimal.valueOf(valueAmount, valueScale)
 }

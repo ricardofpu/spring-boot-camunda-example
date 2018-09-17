@@ -1,6 +1,7 @@
 package br.com.camunda.example.repository
 
 import br.com.camunda.example.domain.dummyTransference
+import br.com.camunda.example.domain.enums.PaymentStatus
 import br.com.camunda.example.domain.randomUUID
 import br.com.camunda.example.repository.config.RepositoryBaseTest
 import org.junit.Test
@@ -126,6 +127,82 @@ class TransferenceRepositoryTest : RepositoryBaseTest() {
         assertNotNull(savedTransference.originAccount)
         assertNotNull(savedTransference.description)
         assertNotNull(find.createdAt)
+    }
+
+    @Test
+    fun `should update status and reason of transference`() {
+        val originAccount = createAccount()
+        val destinationAccount = createAccount()
+
+        val transference = dummyTransference(
+            originAccount = originAccount,
+            destinationAccount = destinationAccount
+        )
+
+        val savedTransference = transferenceRepository.save(transference)
+        assertNotNull(savedTransference)
+
+        val reason = "Completed"
+
+        val updated = transferenceRepository.updateStatusAndReason(
+            savedTransference.id,
+            PaymentStatus.CONFIRMED,
+            reason
+        )
+        assertEquals(1, updated)
+
+        val find = transferenceRepository.findOne(savedTransference.id)
+        assertNotNull(find)
+        assertEquals(savedTransference.id, find.id)
+        assertEquals(transference.transactionId, find.transactionId)
+        assertEquals(transference.description, find.description)
+        assertEquals(transference.priceAmount, find.priceAmount)
+        assertEquals(transference.priceScale, find.priceScale)
+        assertEquals(transference.priceCurrency, find.priceCurrency)
+        assertEquals(PaymentStatus.CONFIRMED, find.status)
+        assertEquals(reason, find.reason)
+        assertEquals(transference.reversedAt, find.reversedAt)
+        assertNotNull(savedTransference.originAccount)
+        assertNotNull(savedTransference.description)
+        assertNotNull(find.createdAt)
+        assertNotNull(find.updatedAt)
+    }
+
+    @Test
+    fun `should update status and reason with null value of transference`() {
+        val originAccount = createAccount()
+        val destinationAccount = createAccount()
+
+        val transference = dummyTransference(
+            originAccount = originAccount,
+            destinationAccount = destinationAccount
+        )
+
+        val savedTransference = transferenceRepository.save(transference)
+        assertNotNull(savedTransference)
+
+        val updated = transferenceRepository.updateStatusAndReason(
+            savedTransference.id,
+            PaymentStatus.CONFIRMED,
+            null
+        )
+        assertEquals(1, updated)
+
+        val find = transferenceRepository.findOne(savedTransference.id)
+        assertNotNull(find)
+        assertEquals(savedTransference.id, find.id)
+        assertEquals(transference.transactionId, find.transactionId)
+        assertEquals(transference.description, find.description)
+        assertEquals(transference.priceAmount, find.priceAmount)
+        assertEquals(transference.priceScale, find.priceScale)
+        assertEquals(transference.priceCurrency, find.priceCurrency)
+        assertEquals(PaymentStatus.CONFIRMED, find.status)
+        assertNull(find.reason)
+        assertEquals(transference.reversedAt, find.reversedAt)
+        assertNotNull(savedTransference.originAccount)
+        assertNotNull(savedTransference.description)
+        assertNotNull(find.createdAt)
+        assertNotNull(find.updatedAt)
     }
 
     @Test

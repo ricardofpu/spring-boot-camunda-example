@@ -34,7 +34,7 @@ open class WorkflowManager @Autowired constructor(
 //        val variables = mutableMapOf<String, Any>()
 //        with(variables) {
 //            put(TRANSACTION_ID, paymentTransaction.transactionId)
-//            put(CUSTOMER_ID, paymentTransaction.customer.id)
+//            put(ORIGIN_CUSTOMER_ID, paymentTransaction.customer.id)
 //            paymentTransaction.destinationCustomerId?.let {
 //                put(DESTINATION_CUSTOMER_ID, paymentTransaction.destinationCustomerId!!)
 //            }
