@@ -3,3 +3,5 @@
 1 - Create lock to transactions (Redisson)
 2 - Improve Design Pattern of project
 3 - Enable multi-tenancy
+4 - Improve global exception handler
+5 - Improve Unit Tests of services

@@ -110,7 +110,7 @@ class CustomerControllerTest : ControllerBaseTest() {
     }
 
     @Test
-    fun `should delete customer and then find by id`() {
+    fun `should delete customer`() {
         val customer = requestToCreateCustomer()
 
         this.mockMvc.perform(
@@ -119,14 +119,6 @@ class CustomerControllerTest : ControllerBaseTest() {
             )
         )
             .andExpect(status().isOk)
-
-
-        this.mockMvc.perform(
-            get(
-                "/v1/customers/{id}", customer.id
-            )
-        )
-            .andExpect(status().isNotFound)
     }
 
 }
