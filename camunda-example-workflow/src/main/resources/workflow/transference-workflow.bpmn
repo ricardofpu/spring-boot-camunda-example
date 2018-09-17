@@ -16,10 +16,10 @@
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="SequenceFlow_0wm7fev" sourceRef="VALIDATE_ORIGIN_CUSTOMER" targetRef="ORIGIN_IS_ACTIVE_GATEWAY" />
     <bpmn:endEvent id="EndEvent_1qpq8dx">
-      <bpmn:incoming>SequenceFlow_1itag1o</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_1cc9p2n</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_09lq61n</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_1itag1o" name="FAIL" sourceRef="ORIGIN_IS_ACTIVE_GATEWAY" targetRef="EndEvent_1qpq8dx">
+    <bpmn:sequenceFlow id="SequenceFlow_1itag1o" name="FAIL" sourceRef="ORIGIN_IS_ACTIVE_GATEWAY" targetRef="ORIGIN_STATUS_INVALID">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${execution.getVariable("isOriginActive") == false}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_0g3a9ar" name="SUCCESS" sourceRef="ORIGIN_IS_ACTIVE_GATEWAY" targetRef="SUB_PROCESS_CREATE_TRANSFERENCE">
@@ -34,6 +34,19 @@
       <bpmn:outgoing>SequenceFlow_1cc9p2n</bpmn:outgoing>
     </bpmn:callActivity>
     <bpmn:sequenceFlow id="SequenceFlow_1cc9p2n" sourceRef="SUB_PROCESS_CREATE_TRANSFERENCE" targetRef="EndEvent_1qpq8dx" />
+    <bpmn:serviceTask id="ORIGIN_STATUS_INVALID" name="Origin Status Invalid" camunda:asyncBefore="true" camunda:delegateExpression="${finishTransferenceTask}">
+      <bpmn:extensionElements>
+        <camunda:field name="status">
+          <camunda:string>REFUSED</camunda:string>
+        </camunda:field>
+        <camunda:field name="reason">
+          <camunda:string>Customer origin is not active</camunda:string>
+        </camunda:field>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1itag1o</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_09lq61n</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_09lq61n" sourceRef="ORIGIN_STATUS_INVALID" targetRef="EndEvent_1qpq8dx" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="TRANSFERENCE_WORKFLOW">
@@ -62,11 +75,10 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1itag1o_di" bpmnElement="SequenceFlow_1itag1o">
         <di:waypoint x="529" y="145" />
-        <di:waypoint x="529" y="228" />
-        <di:waypoint x="866" y="228" />
-        <di:waypoint x="866" y="138" />
+        <di:waypoint x="529" y="239" />
+        <di:waypoint x="654" y="239" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="537" y="157" width="23" height="14" />
+          <dc:Bounds x="537" y="160" width="23" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0g3a9ar_di" bpmnElement="SequenceFlow_0g3a9ar">
@@ -82,6 +94,14 @@
       <bpmndi:BPMNEdge id="SequenceFlow_1cc9p2n_di" bpmnElement="SequenceFlow_1cc9p2n">
         <di:waypoint x="754" y="120" />
         <di:waypoint x="848" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0t2cr9k_di" bpmnElement="ORIGIN_STATUS_INVALID">
+        <dc:Bounds x="654" y="199" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_09lq61n_di" bpmnElement="SequenceFlow_09lq61n">
+        <di:waypoint x="754" y="239" />
+        <di:waypoint x="866" y="239" />
+        <di:waypoint x="866" y="138" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
