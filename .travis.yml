@@ -1,0 +1,27 @@
+language: java
+jdk:
+  - oraclejdk8
+
+sudo: true
+
+services:
+  - postgresql
+
+install: true
+
+before_script:
+  - psql -c 'create database camunda_example;' -U postgres
+  - psql -c "CREATE USER camunda_example WITH PASSWORD 'camunda_example';" -U postgres
+
+script:
+  - mvn clean install
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+
+cache:
+  directories:
+  - $HOME/.m2
+
+notifications:
+  email: false
