@@ -1,4 +1,7 @@
 # Spring Boot and Camunda Engine example
+[![Build Status](https://travis-ci.org/ricardofpu/spring-boot-camunda-example.svg?branch=master)](https://travis-ci.org/ricardofpu/spring-boot-camunda-example)
+[![codecov](https://codecov.io/gh/ricardofpu/spring-boot-camunda-example/branch/master/graph/badge.svg)](https://codecov.io/gh/ricardofpu/spring-boot-camunda-example)
+
 This quickstart example let's show how to build Spring Boot web application using Camunda to workflow orchestration.
 
 ## Introduction
