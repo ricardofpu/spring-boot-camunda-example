@@ -1,5 +1,6 @@
 package br.com.camunda.example.domain.service
 
+import br.com.camunda.example.domain.enums.CustomerStatus
 import br.com.camunda.example.domain.model.Customer
 
 interface CustomerService {
@@ -9,6 +10,8 @@ interface CustomerService {
     fun save(customer: Customer): Customer
 
     fun update(customer: Customer): Customer
+
+    fun updateStatus(customerId: String, status: CustomerStatus): Customer
 
     fun delete(customerId: String)
 
